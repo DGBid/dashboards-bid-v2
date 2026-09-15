@@ -1,30 +1,133 @@
-<!DOCTYPE html>
-<html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Dashboard Ventas | BID</title><style>
-*{box-sizing:border-box;margin:0;padding:0}
-:root{--y:#FFCC29;--g:#1D1D1C;--b:#000;--w:#fff;--c:#151515;--bd:#30302F;--m:#7f7f7b;--s:#b8b8b5}
-body{min-height:100vh;background:radial-gradient(circle at 85% -10%,rgba(255,204,41,.10),transparent 28%),var(--b);color:var(--w);font-family:"Gotham","Gotham SSm","Montserrat",Arial,sans-serif}
-.page{width:min(1240px,calc(100% - 60px));margin:auto;padding:44px 0 64px}
-.nav{display:flex;justify-content:space-between;align-items:center;padding-bottom:34px;border-bottom:1px solid var(--bd)}
-.left{display:flex;align-items:center;gap:24px}.logo{width:118px}.back{color:var(--s);text-decoration:none;font-size:11px;font-weight:600}.back:hover{color:var(--y)}
-.area{color:var(--s);font-size:10px;font-weight:700;letter-spacing:1.25px;text-transform:uppercase}
-.hero{display:grid;grid-template-columns:1fr auto;gap:50px;align-items:end;padding:70px 0 58px}
-.ey{color:var(--y);font-size:10px;font-weight:700;letter-spacing:1.8px;text-transform:uppercase;margin-bottom:20px}
-h1{font-size:clamp(44px,6vw,78px);line-height:.96;letter-spacing:-3px}.yellow{color:var(--y)}
-.count{color:var(--y);font-size:58px;font-weight:700}.countlab{display:block;color:var(--m);font-size:9px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase}
-.head{display:flex;justify-content:space-between;align-items:flex-end;padding-top:24px;margin-bottom:22px;border-top:1px solid var(--bd)}
-.k{color:var(--y);font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:7px}.head h2{font-size:24px}.note{color:var(--m);font-size:11px}
-.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
-.card{min-height:245px;display:flex;flex-direction:column;justify-content:space-between;padding:31px;background:var(--c);border:1px solid var(--bd);border-radius:4px;color:var(--w);text-decoration:none;transition:.2s}
-.card:hover{transform:translateY(-3px);background:var(--g);border-color:rgba(255,204,41,.45)}
-.top{display:flex;justify-content:space-between}.tag{color:var(--y);font-size:9px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase}.num{color:#383838;font-size:36px;font-weight:700}
-.content{margin-top:32px}.content h3{font-size:25px;margin-bottom:14px}.content p{color:var(--s);font-size:13px;line-height:1.6;max-width:500px}
-.action{display:flex;justify-content:flex-end;margin-top:34px}.btn{display:flex;align-items:center;gap:10px;font-size:11px;font-weight:600}.arr{width:32px;height:32px;display:grid;place-items:center;background:var(--y);color:var(--b);font-size:17px;font-weight:700}
-.footer{display:flex;justify-content:space-between;margin-top:58px;padding-top:23px;border-top:1px solid var(--bd);color:var(--m);font-size:9px;font-weight:600;letter-spacing:.7px;text-transform:uppercase}
-.placeholder{padding:38px;background:#111;border:1px solid var(--bd);border-radius:4px}.placeholder h2{font-size:28px;margin-bottom:12px}.placeholder p{color:var(--s);line-height:1.6}
-@media(max-width:850px){.page{width:calc(100% - 34px)}.hero{grid-template-columns:1fr}.hero>div:last-child{display:none}.grid{grid-template-columns:1fr}}
-</style></head>
-<body><div class="page">
-<nav class="nav"><div class="left"><img src="../../logo-bid.png" class="logo" alt="BID"><a class="back" href="./">← Volver</a></div><div class="area">Marketing · Análisis de datos</div></nav>
-<header class="hero"><div><div class="ey">Línea Rovesco</div><h1>Dashboard Ventas</h1></div></header>
-<main><div class="placeholder"><h2>Archivo listo para reemplazar</h2><p>Subí acá el dashboard real conservando este nombre de archivo.</p></div></main>
+<!DOCTYPE html><html lang="es"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Análisis · Meta Linea Rovesco</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<!-- Gotham es una fuente de pago (Hoefler&Co). Se usa Montserrat como proxy geométrico
+     gratuito. Si tenés la licencia de Gotham, cambiá 'Montserrat' por 'Gotham' abajo. -->
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --amarillo:#FFCC29; --gris:#1D1D1C; --negro:#000000;
+    --bg:#F4F4F2; --card:#FFFFFF; --ink:#1D1D1C; --ink-soft:#6E6E6A;
+    --rule:#E3E3DF; --track:#EDEDEA;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:'Montserrat',-apple-system,Segoe UI,sans-serif;background:var(--bg);
+    color:var(--ink);padding:36px 44px 60px}
+  .head{display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap;
+    border-bottom:3px solid var(--gris);padding-bottom:20px;margin-bottom:26px}
+  .head-left{display:flex;flex-direction:column;gap:4px}
+  .eyebrow{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--ink-soft);font-weight:600}
+  .periodo{font-size:12px;color:var(--ink-soft);font-weight:600;margin-top:2px}
+  h1{font-weight:800;font-size:30px;margin:0;letter-spacing:-.4px;text-transform:uppercase}
+  h1 .amar{color:var(--gris);border-bottom:5px solid var(--amarillo);padding-bottom:1px}
+  .logo{height:52px;width:auto;display:block}
+  .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+  @media (max-width:1400px){.grid{grid-template-columns:repeat(2,1fr)}}
+  @media (max-width:700px){.grid{grid-template-columns:1fr}}
+  .card{background:var(--card);border:1px solid var(--rule);border-radius:8px;padding:22px 24px;
+    position:relative;box-shadow:0 1px 2px rgba(0,0,0,.03)}
+  .card::before{content:"";position:absolute;left:0;top:0;height:4px;width:52px;background:var(--amarillo);
+    border-radius:8px 0 8px 0}
+  .card h2{font-size:12.5px;text-transform:uppercase;letter-spacing:.6px;color:var(--gris);
+    margin:6px 0 3px;font-weight:700}
+  .explica{font-size:11.5px;color:var(--ink-soft);margin:0 0 16px;line-height:1.5;font-weight:500}
+  .kpicard{background:var(--gris);border-radius:8px;padding:24px 26px;margin-bottom:18px}
+  .kpirow{display:grid;grid-template-columns:repeat(6,1fr);gap:16px}
+  .kpi{border-right:1px solid rgba(255,255,255,.15);padding-right:16px}
+  .kpi:last-child{border-right:none}
+  .kpi .num{font-size:36px;font-weight:800;color:var(--amarillo);line-height:1;letter-spacing:-.5px}
+  .kpi .cap{color:#C9C9C4;font-size:11px;margin-top:7px;letter-spacing:.6px;text-transform:uppercase;font-weight:600}
+  .row{display:flex;align-items:center;gap:8px;margin:9px 0}
+  .lbl{flex:1 1 0;min-width:0;font-size:12px;line-height:1.3;font-weight:500}
+  .val{width:78px;flex:0 0 78px;text-align:right;font-variant-numeric:tabular-nums;
+    font-size:11.5px;color:var(--ink-soft);font-weight:600}
+  .track{width:82px;flex:0 0 82px;height:11px;background:var(--track);border-radius:6px;overflow:hidden}
+  .bar{display:block;height:100%;background:var(--gris);border-radius:6px}
+  .card:nth-child(2n) .bar{background:var(--amarillo)}
+  table{width:100%;border-collapse:collapse;font-size:12.5px}
+  th,td{padding:9px 6px;text-align:right;border-bottom:1px solid var(--rule);font-variant-numeric:tabular-nums}
+  th:first-child,td.vn{text-align:left;font-variant-numeric:normal;font-weight:600}
+  th{color:var(--ink-soft);font-weight:700;font-size:10.5px;text-transform:uppercase;letter-spacing:.4px}
+  tbody tr:hover{background:#FBFBFA}
+  .note{color:var(--ink-soft);font-size:11.5px;margin-top:12px;line-height:1.6;border-top:1px solid var(--rule);
+    padding-top:10px;font-weight:500}
+  .span2{grid-column:1/-1}
+  .fila-flex{display:flex;gap:2%}
+  .fila-flex .card{min-width:0}
+  .card-grande h2{font-size:15px}
+  .card-grande .explica{font-size:13.5px}
+  .card-grande .lbl{font-size:15px}
+  .card-grande .val{font-size:14px}
+  .card-grande .track{height:14px}
+  .card-grande .row{margin:16px 0}
+  .card-grande .note{font-size:13px}
+  .card-mediano h2{font-size:13.5px}
+  .card-mediano .explica{font-size:12.5px}
+  .card-mediano .lbl{font-size:13px}
+  .card-mediano .val{font-size:12.5px}
+  .card-mediano .track{height:12px}
+  .card-mediano .row{margin:12px 0}
+  .card-mediano .note{font-size:12px}
+  @media (max-width:900px){.fila-flex{flex-wrap:wrap} .fila-flex .card{flex-basis:100% !important}}
+  @media (max-width:640px){.track{width:60px;flex-basis:60px} .kpirow{grid-template-columns:repeat(2,1fr);row-gap:18px}
+    .kpi{border-right:none}}
+</style></head><body>
+
+<div class="head">
+  <div class="head-left">
+    <div class="eyebrow">Análisis de campaña</div>
+    <h1><span class="amar">Meta Linea Rovesco</span></h1>
+    <div class="periodo">Período analizado: 13/08/2026 — 31/08/2026</div>
+  </div>
+  <img class="logo" src="data:image/png;base64,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" alt="BID">
+</div>
+
+<div class="kpicard"><div class="kpirow">
+  <div class="kpi"><div class="num">507</div><div class="cap">Leads únicos</div></div>
+  <div class="kpi"><div class="num">11</div><div class="cap">Pasados a CRM</div></div>
+  <div class="kpi"><div class="num">2.2%</div><div class="cap">Tasa de conversión</div></div>
+  <div class="kpi"><div class="num">181</div><div class="cap">Recibieron audio</div></div>
+  <div class="kpi"><div class="num">162</div><div class="cap">32.0% avance</div></div>
+  <div class="kpi"><div class="num">87</div><div class="cap">48.1% avanza tras audio</div></div>
+</div></div>
+
+<div class="grid">
+  <div class="card"><h2>Tasa de respuesta del cliente por tipo de mensaje</h2>
+    <p class="explica">Qué combinación de mensajes conviene usar para abrir la conversación.</p><div class="row"><div class="lbl">Automático</div><div class="track"><div class="bar" style="width:30.2%"></div></div><div class="val">30.2% (129)</div></div><div class="row"><div class="lbl">Texto+Link+Multimedia+Audio</div><div class="track"><div class="bar" style="width:46.3%"></div></div><div class="val">46.3% (123)</div></div><div class="row"><div class="lbl">Texto+Link</div><div class="track"><div class="bar" style="width:18.0%"></div></div><div class="val">18.0% (100)</div></div><div class="row"><div class="lbl">Texto+Link+Multimedia</div><div class="track"><div class="bar" style="width:24.6%"></div></div><div class="val">24.6% (65)</div></div><div class="row"><div class="lbl">Texto</div><div class="track"><div class="bar" style="width:53.2%"></div></div><div class="val">53.2% (47)</div></div><div class="row"><div class="lbl">Texto+Link+Audio</div><div class="track"><div class="bar" style="width:38.9%"></div></div><div class="val">38.9% (36)</div></div><div class="row"><div class="lbl">Texto+Multimedia</div><div class="track"><div class="bar" style="width:100.0%"></div></div><div class="val">100.0% (2)</div></div><div class="row"><div class="lbl">Link+Multimedia+Audio</div><div class="track"><div class="bar" style="width:0.0%"></div></div><div class="val">0.0% (1)</div></div>
+    <div class="note">Combinación de la primera ráfaga (una por lead). "Responde" = el cliente escribe justo después.</div></div>
+
+  <div class="card card-grande"><h2>Conversión a CRM por vendedor</h2>
+    <p class="explica">Qué proporción de los leads de cada vendedor terminó pasando a venta telefónica (CRM).</p><div class="row"><div class="lbl">Marcelo Gomez</div><div class="track"><div class="bar" style="width:2.5%"></div></div><div class="val">2.5% (5)</div></div><div class="row"><div class="lbl">Yamila Hardach</div><div class="track"><div class="bar" style="width:2.0%"></div></div><div class="val">2.0% (3)</div></div><div class="row"><div class="lbl">Mariana Calgaterra</div><div class="track"><div class="bar" style="width:1.9%"></div></div><div class="val">1.9% (3)</div></div><div class="row"><div class="lbl">Felipe Gomez Smith</div><div class="track"><div class="bar" style="width:0.0%"></div></div><div class="val">0.0% (0)</div></div></div>
+
+  <div class="card card-mediano"><h2>Avance según cantidad de mensajes en la ráfaga</h2>
+    <p class="explica">Si mandar muchos mensajes seguidos de golpe ayuda o satura al cliente.</p><div class="row"><div class="lbl">≤2 mensajes</div><div class="track"><div class="bar" style="width:28.9%"></div></div><div class="val">28.9% (263)</div></div><div class="row"><div class="lbl">3 mensajes</div><div class="track"><div class="bar" style="width:28.3%"></div></div><div class="val">28.3% (92)</div></div><div class="row"><div class="lbl">4 mensajes</div><div class="track"><div class="bar" style="width:38.8%"></div></div><div class="val">38.8% (103)</div></div><div class="row"><div class="lbl">5+ mensajes</div><div class="track"><div class="bar" style="width:44.4%"></div></div><div class="val">44.4% (45)</div></div>
+    <div class="note">Ráfaga = mensajes consecutivos del vendedor antes de que hable el cliente.</div></div>
+
+  <div class="card"><h2>Índice de intención del lead (0-5)</h2>
+    <p class="explica">Qué tan “calientes” llegan los leads de esta campaña, según lo que piden.</p><div class="row"><div class="lbl">Nivel 0 — Curiosidad (mensaje genérico)</div><div class="track"><div class="bar" style="width:72.6%"></div></div><div class="val">72.6% (368)</div></div><div class="row"><div class="lbl">Nivel 1 — Interés genérico (precio sin especificar)</div><div class="track"><div class="bar" style="width:21.9%"></div></div><div class="val">21.9% (111)</div></div><div class="row"><div class="lbl">Nivel 2 — Interés específico (modelo/HP puntual)</div><div class="track"><div class="bar" style="width:0.0%"></div></div><div class="val">0.0% (0)</div></div><div class="row"><div class="lbl">Nivel 3 — Evaluación (2+ datos técnicos juntos)</div><div class="track"><div class="bar" style="width:2.4%"></div></div><div class="val">2.4% (12)</div></div><div class="row"><div class="lbl">Nivel 4 — Compra potencial (financiación/envío)</div><div class="track"><div class="bar" style="width:2.4%"></div></div><div class="val">2.4% (12)</div></div><div class="row"><div class="lbl">Nivel 5 — Alta intención (dato de negocio/pago)</div><div class="track"><div class="bar" style="width:0.8%"></div></div><div class="val">0.8% (4)</div></div>
+    <div class="note">Se calcula sobre todos los mensajes del lead (todas sus sesiones), no solo el primero.</div></div>
+
+  <div class="span2 fila-flex">
+    <div class="card" style="flex:0 0 49%"><h2>Dónde murió la conversación</h2>
+      <p class="explica">En qué momento se corta la conversación, para saber dónde está la fuga.</p><div class="row"><div class="lbl">Después de link</div><div class="track"><div class="bar" style="width:22.4%"></div></div><div class="val">22.4% (111)</div></div><div class="row"><div class="lbl">Después de audio</div><div class="track"><div class="bar" style="width:22.2%"></div></div><div class="val">22.2% (110)</div></div><div class="row"><div class="lbl">Después de automático</div><div class="track"><div class="bar" style="width:19.0%"></div></div><div class="val">19.0% (94)</div></div><div class="row"><div class="lbl">Después de texto</div><div class="track"><div class="bar" style="width:14.9%"></div></div><div class="val">14.9% (74)</div></div><div class="row"><div class="lbl">Después de multimedia</div><div class="track"><div class="bar" style="width:13.3%"></div></div><div class="val">13.3% (66)</div></div><div class="row"><div class="lbl">Última palabra del cliente</div><div class="track"><div class="bar" style="width:8.1%"></div></div><div class="val">8.1% (40)</div></div><div class="row"><div class="lbl">El vendedor nunca respondió</div><div class="track"><div class="bar" style="width:0.2%"></div></div><div class="val">0.2% (1)</div></div>
+      <div class='note'>El vendedor nunca respondió a: correamarialorena / MARCELO (Marcelo Gomez)</div>
+      <div class="note">No incluye los leads que convirtieron a CRM.</div></div>
+
+    <div class="card" style="flex:0 0 49%"><h2>Leads por día</h2>
+      <p class="explica">Cuántos leads nuevos entraron cada día, según la fecha del primer mensaje del cliente.</p>
+      <div class="row"><div class="lbl">13/08</div><div class="track"><div class="bar" style="width:56.1%"></div></div><div class="val">32</div></div><div class="row"><div class="lbl">14/08</div><div class="track"><div class="bar" style="width:50.9%"></div></div><div class="val">29</div></div><div class="row"><div class="lbl">15/08</div><div class="track"><div class="bar" style="width:45.6%"></div></div><div class="val">26</div></div><div class="row"><div class="lbl">16/08</div><div class="track"><div class="bar" style="width:43.9%"></div></div><div class="val">25</div></div><div class="row"><div class="lbl">17/08</div><div class="track"><div class="bar" style="width:38.6%"></div></div><div class="val">22</div></div><div class="row"><div class="lbl">18/08</div><div class="track"><div class="bar" style="width:1.8%"></div></div><div class="val">1</div></div><div class="row"><div class="lbl">19/08</div><div class="track"><div class="bar" style="width:64.9%"></div></div><div class="val">37</div></div><div class="row"><div class="lbl">20/08</div><div class="track"><div class="bar" style="width:61.4%"></div></div><div class="val">35</div></div><div class="row"><div class="lbl">21/08</div><div class="track"><div class="bar" style="width:59.6%"></div></div><div class="val">34</div></div><div class="row"><div class="lbl">22/08</div><div class="track"><div class="bar" style="width:68.4%"></div></div><div class="val">39</div></div><div class="row"><div class="lbl">23/08</div><div class="track"><div class="bar" style="width:26.3%"></div></div><div class="val">15</div></div><div class="row"><div class="lbl">24/08</div><div class="track"><div class="bar" style="width:59.6%"></div></div><div class="val">34</div></div><div class="row"><div class="lbl">25/08</div><div class="track"><div class="bar" style="width:73.7%"></div></div><div class="val">42</div></div><div class="row"><div class="lbl">26/08</div><div class="track"><div class="bar" style="width:56.1%"></div></div><div class="val">32</div></div><div class="row"><div class="lbl">27/08</div><div class="track"><div class="bar" style="width:49.1%"></div></div><div class="val">28</div></div><div class="row"><div class="lbl">28/08</div><div class="track"><div class="bar" style="width:31.6%"></div></div><div class="val">18</div></div><div class="row"><div class="lbl">29/08</div><div class="track"><div class="bar" style="width:1.8%"></div></div><div class="val">1</div></div><div class="row"><div class="lbl">31/08</div><div class="track"><div class="bar" style="width:100.0%"></div></div><div class="val">57</div></div>
+    </div>
+  </div>
+
+  <div class="card span2"><h2>Alcance por vendedor (a cuántos leads les mandó cada tipo)</h2>
+    <p class="explica">A cuántos leads distintos cada vendedor les mandó al menos un mensaje de cada tipo.</p>
+    <table><thead><tr><th>Vendedor</th><th>Total leads</th><th>Audio</th><th>Link</th><th>Multimedia</th><th>Texto</th><th>Automático</th></tr></thead>
+    <tbody><tr><td class='vn'>Marcelo Gomez</td><td><b>197</b></td><td>164</td><td>161</td><td>133</td><td>161</td><td>50</td></tr><tr><td class='vn'>Yamila Hardach</td><td><b>147</b></td><td>13</td><td>59</td><td>58</td><td>96</td><td>66</td></tr><tr><td class='vn'>Mariana Calgaterra</td><td><b>162</b></td><td>3</td><td>141</td><td>55</td><td>141</td><td>23</td></tr><tr><td class='vn'>Felipe Gomez Smith</td><td><b>1</b></td><td>1</td><td>1</td><td>1</td><td>1</td><td>0</td></tr></tbody></table></div>
+
+  <div class="card span2"><h2>Efectividad de avance por vendedor, controlado por el índice de intención</h2>
+    <p class="explica">Compara a los vendedores contra leads de calidad parecida, no en bruto.</p>
+    <table><thead><tr><th>Vendedor</th><th>Genérico (0)</th><th>Solo precio (1)</th><th>Intermedio (2)</th><th>Alta intención (3-5)</th><th>Promedio general</th></tr></thead>
+    <tbody><tr><td class='vn'>Marcelo Gomez</td><td>36% (143)</td><td>57% (46)</td><td>—</td><td>62% (8)</td><td><b>42% (197)</b></td></tr><tr><td class='vn'>Yamila Hardach</td><td>27% (100)</td><td>44% (36)</td><td>—</td><td>64% (11)</td><td><b>34% (147)</b></td></tr><tr><td class='vn'>Mariana Calgaterra</td><td>16% (124)</td><td>34% (29)</td><td>—</td><td>33% (9)</td><td><b>20% (162)</b></td></tr><tr><td class='vn'>Felipe Gomez Smith</td><td>0% (1)</td><td>—</td><td>—</td><td>—</td><td><b>0% (1)</b></td></tr></tbody></table></div>
 </div></body></html>
