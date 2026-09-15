@@ -1,30 +1,181 @@
-<!DOCTYPE html>
-<html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Dashboard Kommo + Meta | BID</title><style>
-*{box-sizing:border-box;margin:0;padding:0}
-:root{--y:#FFCC29;--g:#1D1D1C;--b:#000;--w:#fff;--c:#151515;--bd:#30302F;--m:#7f7f7b;--s:#b8b8b5}
-body{min-height:100vh;background:radial-gradient(circle at 85% -10%,rgba(255,204,41,.10),transparent 28%),var(--b);color:var(--w);font-family:"Gotham","Gotham SSm","Montserrat",Arial,sans-serif}
-.page{width:min(1240px,calc(100% - 60px));margin:auto;padding:44px 0 64px}
-.nav{display:flex;justify-content:space-between;align-items:center;padding-bottom:34px;border-bottom:1px solid var(--bd)}
-.left{display:flex;align-items:center;gap:24px}.logo{width:118px}.back{color:var(--s);text-decoration:none;font-size:11px;font-weight:600}.back:hover{color:var(--y)}
-.area{color:var(--s);font-size:10px;font-weight:700;letter-spacing:1.25px;text-transform:uppercase}
-.hero{display:grid;grid-template-columns:1fr auto;gap:50px;align-items:end;padding:70px 0 58px}
-.ey{color:var(--y);font-size:10px;font-weight:700;letter-spacing:1.8px;text-transform:uppercase;margin-bottom:20px}
-h1{font-size:clamp(44px,6vw,78px);line-height:.96;letter-spacing:-3px}.yellow{color:var(--y)}
-.count{color:var(--y);font-size:58px;font-weight:700}.countlab{display:block;color:var(--m);font-size:9px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase}
-.head{display:flex;justify-content:space-between;align-items:flex-end;padding-top:24px;margin-bottom:22px;border-top:1px solid var(--bd)}
-.k{color:var(--y);font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:7px}.head h2{font-size:24px}.note{color:var(--m);font-size:11px}
-.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
-.card{min-height:245px;display:flex;flex-direction:column;justify-content:space-between;padding:31px;background:var(--c);border:1px solid var(--bd);border-radius:4px;color:var(--w);text-decoration:none;transition:.2s}
-.card:hover{transform:translateY(-3px);background:var(--g);border-color:rgba(255,204,41,.45)}
-.top{display:flex;justify-content:space-between}.tag{color:var(--y);font-size:9px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase}.num{color:#383838;font-size:36px;font-weight:700}
-.content{margin-top:32px}.content h3{font-size:25px;margin-bottom:14px}.content p{color:var(--s);font-size:13px;line-height:1.6;max-width:500px}
-.action{display:flex;justify-content:flex-end;margin-top:34px}.btn{display:flex;align-items:center;gap:10px;font-size:11px;font-weight:600}.arr{width:32px;height:32px;display:grid;place-items:center;background:var(--y);color:var(--b);font-size:17px;font-weight:700}
-.footer{display:flex;justify-content:space-between;margin-top:58px;padding-top:23px;border-top:1px solid var(--bd);color:var(--m);font-size:9px;font-weight:600;letter-spacing:.7px;text-transform:uppercase}
-.placeholder{padding:38px;background:#111;border:1px solid var(--bd);border-radius:4px}.placeholder h2{font-size:28px;margin-bottom:12px}.placeholder p{color:var(--s);line-height:1.6}
-@media(max-width:850px){.page{width:calc(100% - 34px)}.hero{grid-template-columns:1fr}.hero>div:last-child{display:none}.grid{grid-template-columns:1fr}}
-</style></head>
-<body><div class="page">
-<nav class="nav"><div class="left"><img src="../../logo-bid.png" class="logo" alt="BID"><a class="back" href="./">← Volver</a></div><div class="area">Marketing · Análisis de datos</div></nav>
-<header class="hero"><div><div class="ey">Sierras Carniceras General</div><h1>Dashboard Kommo + Meta</h1></div></header>
-<main><div class="placeholder"><h2>Archivo listo para reemplazar</h2><p>Subí acá el dashboard real conservando este nombre de archivo.</p></div></main>
-</div></body></html>
+<!DOCTYPE html><html lang="es"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Análisis · Sierras Carniceras General — Meta Ads + Kommo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<!-- Gotham es una fuente de pago (Hoefler&Co). Se usa Montserrat como proxy geométrico
+     gratuito. Si tenés la licencia de Gotham, cambiá 'Montserrat' por 'Gotham' abajo. -->
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --amarillo:#FFCC29; --gris:#1D1D1C; --negro:#000000;
+    --bg:#F4F4F2; --card:#FFFFFF; --ink:#1D1D1C; --ink-soft:#6E6E6A;
+    --rule:#E3E3DF; --track:#EDEDEA;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:'Montserrat',-apple-system,Segoe UI,sans-serif;background:var(--bg);
+    color:var(--ink);padding:36px 44px 60px}
+  .head{display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap;
+    border-bottom:3px solid var(--gris);padding-bottom:20px;margin-bottom:26px}
+  .head-left{display:flex;flex-direction:column;gap:4px}
+  .eyebrow{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--ink-soft);font-weight:600}
+  .periodo{font-size:12px;color:var(--ink-soft);font-weight:600;margin-top:2px}
+  h1{font-weight:800;font-size:30px;margin:0;letter-spacing:-.4px;text-transform:uppercase}
+  h1 .amar{color:var(--gris);border-bottom:5px solid var(--amarillo);padding-bottom:1px}
+  .logo{height:52px;width:auto;display:block}
+  .section-label{font-size:12px;text-transform:uppercase;letter-spacing:1.2px;color:var(--ink-soft);
+    font-weight:700;margin:34px 2px 12px;display:flex;align-items:center;gap:8px}
+  .section-label::before{content:"";width:16px;height:3px;background:var(--amarillo);border-radius:2px}
+  .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-bottom:18px}
+  .grid-1{grid-template-columns:1fr}
+  .grid-2{grid-template-columns:repeat(2,1fr)}
+  .grid-3{grid-template-columns:repeat(3,1fr)}
+  @media (max-width:1400px){.grid{grid-template-columns:repeat(2,1fr)}}
+  @media (max-width:1100px){.grid-3{grid-template-columns:repeat(2,1fr)}}
+  @media (max-width:700px){.grid,.grid-2,.grid-3{grid-template-columns:1fr}}
+  .card{background:var(--card);border:1px solid var(--rule);border-radius:8px;padding:22px 24px;
+    position:relative;box-shadow:0 1px 2px rgba(0,0,0,.03)}
+  .card::before{content:"";position:absolute;left:0;top:0;height:4px;width:52px;background:var(--amarillo);
+    border-radius:8px 0 8px 0}
+  .card h2{font-size:14px;text-transform:uppercase;letter-spacing:.6px;color:var(--gris);
+    margin:6px 0 4px;font-weight:700}
+  .explica{font-size:13px;color:var(--ink-soft);margin:0 0 18px;line-height:1.55;font-weight:500}
+  .kpicard{background:var(--gris);border-radius:8px;padding:16px 26px;margin-bottom:18px}
+  .kpirow{display:grid;grid-template-columns:repeat(5,1fr);gap:16px;align-items:center}
+  .kpi{display:flex;flex-direction:column;justify-content:center;
+    border-right:1px solid rgba(255,255,255,.15);padding-right:16px}
+  .kpi:last-child{border-right:none}
+  .kpi .num{font-size:28px;font-weight:800;color:var(--amarillo);line-height:1;letter-spacing:-.5px}
+  .kpi .cap{color:#C9C9C4;font-size:10.5px;margin-top:5px;letter-spacing:.6px;text-transform:uppercase;font-weight:600}
+  .kpi .subcap{color:var(--amarillo);font-size:11px;margin-top:4px;font-weight:700}
+  .kpi .kpi-note-inline{color:#C9C9C4;font-size:10px;margin-top:4px;line-height:1.4;font-weight:500}
+  .kpi-note{color:#C9C9C4;font-size:11.5px;margin-top:14px;padding-top:12px;
+    border-top:1px solid rgba(255,255,255,.15);line-height:1.6;font-weight:500}
+  .row{display:flex;align-items:center;gap:10px;margin:12px 0}
+  .lbl{flex:1 1 0;min-width:0;font-size:14px;line-height:1.35;font-weight:500}
+  .val{width:130px;flex:0 0 130px;text-align:right;font-variant-numeric:tabular-nums;
+    font-size:13px;color:var(--ink-soft);font-weight:600}
+  .track{width:90px;flex:0 0 90px;height:13px;background:var(--track);border-radius:7px;overflow:hidden}
+  .bar{display:block;height:100%;background:var(--gris);border-radius:7px}
+  .card:nth-child(2n) .bar{background:var(--amarillo)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px}
+  th,td{padding:10px 7px;text-align:right;border-bottom:1px solid var(--rule);font-variant-numeric:tabular-nums}
+  th:first-child,td.vn{text-align:left;font-variant-numeric:normal;font-weight:600}
+  th{color:var(--ink-soft);font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:.4px}
+  tbody tr:hover{background:#FBFBFA}
+  .note{color:var(--ink-soft);font-size:12.5px;margin-top:12px;line-height:1.6;border-top:1px solid var(--rule);
+    padding-top:10px;font-weight:500}
+  .subhead{margin-top:22px;padding-top:18px;border-top:1px solid var(--rule)}
+  tr.total-row td{border-top:2px solid var(--gris);font-weight:700;color:var(--ink)}
+  @media (max-width:640px){.track{width:65px;flex-basis:65px} .val{width:95px;flex-basis:95px}
+    .kpirow{grid-template-columns:repeat(2,1fr);row-gap:18px} .kpi{border-right:none}}
+</style></head><body>
+
+<div class="head">
+  <div class="head-left">
+    <div class="eyebrow">Ficha de análisis de campaña · Meta Ads + Kommo</div>
+    <h1><span class="amar">Sierras Carniceras General</span></h1>
+    <div class="periodo">Período analizado: 25/06/2026 — 25/08/2026</div>
+  </div>
+  <img class="logo" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAARsAAAB4CAYAAADCOlZhAAAWeElEQVR4nO2de5RdVX3HP/cxQx48kkgeYFDBVBfKoyW0hS6KWIhV0draUpRCS4ktUixoLdBaClTLw1pwqRUWj2rlYShUqiIPAy2N6AJ5E1QIkRAgvBImGhNCMjN3Tv/4na/nzM287ty9zz0z8/usddade+6dc849e5/v/u3f/u3frgDXAG8HGkCF8dMPTAO+DFwJdAF9wL8AS4BeoNbG8WNRBbYAm4BtwMvAGuBRYDXwbNP368BAunWCGlZWZwDHYfe42qFrKZoE+/1/BywnuxfDoc8/BxxFuepgFXgNeAWrU1uAnwPrgReAZ4Cn0883DPP/VTpbF1uiDhwI7B/wmHulr3oA3gr8asDjF8kmYCVwD/Ad4F7s4QartAnFF7QahL2ZuPe1XeaO8Xu6VxO1DjaAF7HGbzVwH9YIPoHVzXzd63QjOCp1YDvZRbbTQvaRWTN5etNj96fnKytJ7u8Kdi92A3473c4EVgE3AFcDP02/W8N+X/7/i6AvPW+D8rTWsVEd7W/x/8pcB4eqN6p/NWBhuh0OLE0/Xwc8CNwBrAB+RHZP9L+dqJMjUie7OGhPbGTWNXfFKrnPJpq5n7dcqlgL+Y/AJ4FlwMXA4+nno5n0odF9TZh497UdhqpjozFZ6iDY9UuAPoAZCw8BNwP/jVk9qoedagiHZKLd+KKpYAVWS/9W6zgDa2XuBc4HdmFqWRhOceTrYL4eNrC6uBNwKHAB8BhwO/BhYOf0O0nu/zqKi01rVDFrMMEKelfgU5joLCFzsne8YJ1JjbpYqov5LuLvAl8HHsas8DdQEtFxsRkfFQaLztuw0ZHz0n1TrWvjdA51EVUfG+m2CPg0JjoXYQM3edEpHH8g2kOiIwf7uZgDeRfad7g7Tqvku1yyduYAZ2EO5bPJuvx5X20h+MMQBjkt+4FjgFuwLpYLjtMpmrv8c4HPYJbOn5J1vwqzcvxBCIesnH5sqPwWYBZWoO7DcTpFvsvfAN4MfA24Fev+F2bluNiER4JzGPBtbOTKncZOp1EXS13+92DBqh+nICvHxSYOeQvnCrKCdMFxOo1ijRpYV//zmJWjUatoQY8uNvGoY1G+fwJ8AhMfv99OWdB0mwZm5dwLHI3V0ygNo1f+uNSxwrwI+HU88M8pF+paNYA9sPl/Z5ENkQfVBxebuMhX0w1chkV7ar/jlIW8L+ci4CpsnmPQ0VQXm/iof7wYODn92++7Uzby4RtLscGNWQQUHK/0xaD5LH+PxTv4cLhTRvLhG+8G7gTmEWikysWmGDTlfwHwUXw6g1NuJDiLgdswwWnb31hEhR8o8Vbk1Hulg/hLzDxtNzOiM3aSkm9lRIJzEBagOpc2XQBFJBKahl1gdwHnGg8a/oud60S+G+Uh+RrWUrSaCEooECtklyzG7w/5QCmvS6vH68LuUVeg6wiJphNANqBQliBQCc7BmIVzJJYhUJZ6yweLhSrEKiyF5TbKM+xbAXbHJqXtRnYfJDoxCzoBTsCy/bWTwrGLiZEMKuSDo9/aar19BXiJcoUeVIDZWCM81O9RAqzY9XE0FL6xGJtk/H5MgCq0KPpFiM0ZWErNspmLXZhpeADwTizhkPInx6qUOuZhwD7AU7TeSug+vgysJQvCCsHrCWeBJliF3Iw96CHqmhyVvxjj92UxnEwWxFYGiwHsOhZhjd6e2JylxVg2yEUMvl/q8ndKeGSBvwsL4VhKZvW0xANkXYl2+p296es56XHLaLKOxCws3ecGMtM2Rv9cxz0pPe94H8JuLBvbjDa3menrLlhy9xB1IcGipxNs9Y5uLDS+3WvV9ZYtj3BI6tgCBB8BbsSEuvm+DtB++bRTpmfmrrUlihCb5r5omTbl/xBvAe4mnuCowJal5yuLWQ/wCOHF5ivpsTvd3et0PRtqy2fcqzH0PZqLdbtvZXC59FO86ChHTj+2NA7DXPOwuGVj5B2IM4HvEu7By2863o/JuizjMY1DVniJ7iMBf7PE5qtk9zbUNU9m8iLU3BAdhHVjNjNYdIoUHNWNF7Fu95jLpNOtTZnQA1IDXgX+AMtuNi7P+wioYPYB5rdxnBgVKRYT5TrLQEKW0FzhEZoY+RBwCvBr2GKQGnQpMoxDo6oLsIwGCWP0JbnY7Iicw1uB47GVCiFcYapQpmGCk9/nOM3krQlZPD8FPoalMFlO9rAXtZSQHMbvBU5ljPE3LjZDo7weTwCXEN660bEWpq9eDs5YkMUj0XkAW01hKTa8307cVqvombgQGz0bdQ6VV/LhkQl7KdBDNnQaAonNvEDHc6YWedGpYk74Q4G7yOJiYnerFBG/C5aAK2EUC30yDyG2S4IJzMtY9OTxhEudqIqwa/rq3aiIJAlVbox4j49hoFLpiC9JjVYd61q9C1ul9bR0/6gC0CbKhfM+4IPATbl9O+BiMzLytEtsQleoye7sLAWVStAucBlRFsgGcDrW/f8imfM4Zg+mgtXjz2Krcb6W2zcIF5uR0ejHKjI/TuzWwglIklB97eG5h0yfVpnZ38cAlYBll5DQldTqfY2fVA7cuC5JqHTIwoFsjlwdGx5fD1xPtq5ZLMGRyC3CRsouZhjrxsVmZFRxNmCxDbMCH3+yt7gdQw/+c/cs3Gn+9O3XMq26dz1Jwj5y/cCuVfpe4TTgS2QPXqdQ3E0d+AZwLJngxGwk5b85A7gWE7odrBsXm5HRzdqMmYezCFNoqvI9Tedx4rCN7clAb18StIWvQH/XduoMFDYCNFYkODdhc/6uZ3AAZ2g07D4fGwo/hyGsGx+NGhkVzBxsHlJ+X4jj9oz4LScU9qAlVCuE28i2Mnar8xbOKWT+m1jIulmKzWbfIfWJi83I6GbNw8QmlAWi+74mffXulBMDCc5VwOcYYaQoABWsHu8JnEgWhPhLXGxGRqNRB5CZiu22YhKsX2ApIvL7HCc0iog/C8spHFtwEuAvsJVEBlk3LjYjozknv5e+D2Euy4r5MbCRYYYJHScQ+TllJ2KDHaEj4oW6UvtiCdMHWTcuNsOTv3G/Qxbk1y4q+AcpYH1lxyGrZ89jq7PGbOB03BOb3rvYjIDE5ixs0mSolkAOxbvS927VOEWgOLHrgJuJ152SpizB1g//5Qigi83QKOXhEixxUaghU5mVPcD3c/scpwjkQ/lbLJuBGtSQyLc5E0vToiF3F5shkNDsja2AoHsU0l+zAgt8itV3dpyhUKP5JBZlrBGkGCTYKiJKkeFik6NKJjS/gi0/ugdhQ70lWF9teu84RSHr5gvAz4lj3chV8JtYVyoBqkWIjcyoMm7K/yqF78dGnlYA+xF2XW4V8ipsCDJmq+I4w6Gu/PPAlcSph+pKzQCOSPcVIjZKc1jGrUGWw3UxNq/jW2QWTciRIk1zuJQsnaP7a5xOkK+LW4lTF3W8JXpfxNyo+ViCnU5OUMujYb+dsDyqh2LrRh3F4CHBkEKsrtg6bHG6IlM4Ok4zakjXYu6CD5GNVoVCz89vAdOBbTHFRie7BPhDYDvlmfiZYDegWVBiLU4n0/U8rJ8cM4rTccZKBWv8PkR4/60a7jdiPtCVRTz80zErQsvFlol8Vnr5cGKcowb8ECvY2BPiHGcs5EdG12DJ90MPhqjx3h9YWcTDr3yooddfCrFJYLRURmh0nl7gr7GlYrTfcTqJ6v9WbI007YvBYijG0gi1MFmMLTZS9s8A9+PdJ6d8VMjEJtYzcQCUr1szmZDD7TbgfLz75JQPWd73A5sIH3Mj8Xo9MNPFJg6yaFYBf5buU8E6TllQ7NcLwOPpvhhisxcw18UmPBKal7Bw7Q14AJ9TXqQB96WvMZaangns6WITFo08bcImoa3Cu09OuZEgPBHp+LKU9naxCYdM0kexQMF7yVYndJyyIjFYnb6GDv/Q8Re42ISlghXapvR9P54cyyk3EoPnsRCN0Im1dKx5LjbhkCf/jzCT9GJsqkZ+TWbHKRsSg/VYlH8sdvMHICxyBO8C/A2W+vMksomfbuU4ZeVVLAl/LHzoOwKycPqx+IJ/B27EJn2GnuzmOKHox+btQZwQjTkuNnGokC152sC6VvcAh+N+HKe8xNSDARebuFQwYekH3gQsB47HLRxnCuJiUwx1zGezE3ANlnBaqxU6TlmIujyvi01xyJczgC2FeiYuOE55qAOz0r9jTMjc5GJTLJpt3gA+i41UuQ/HKQPTsVHUWGx2sSkeJYBvAJdjq23GyhDoOKMhK2Y+thhjLAoTm04nyRrLViSycOrAMmxW7KBF2B2nIFTnFgLdZMnQQx9/fZHJs6oMncCqLBtk8THKKhgTWTfzyNaRckvTKRrV/b3T19Bz+XT854twTvbntjLnc9H6Ufl70iATyhhoWPxI4FTg3/Bsfk6x6Jl8e6TjS2yeiSk2GkY7BQvdLzNV4HVYxO++2PIT7yTzzmt+U4xujlJQXADcCjyNL8vrFIfq2cHpa4yGdSvwQhGWzcYCzhGC54BHgFvS93sCvw/8FZnqh8w+L/Lzqf4JOCHCORxnKNSoLQDelu4L2aDqeXmOAn02nV5mt9XleKtYqsRLgd8APkmWozVGF0eFfhxwCD465RSD/JUHAbMJP0ihLtpzwJapvvzucMvx6qbXMBPwEmxe02NkfpaQKIdIFTgr3Vdm/5YzeUiA9+b+jsFPwM31kdAkSjmNV2J+nDuJk4FP6y2/B9iPOF02xxHqvs/A6pz2xeBh8Mo8FjQcXgN6MD/OQ8TJLdzA5k+dlL73uBsnFnr2DyX8apiQWeoNXGxaRn6UV7G1y3vS/SEFR+VxDLAzmWXlODFIyJYaCt1wKjjwGSzxf8XFpjWUGmIt8AnCi7Umay7EfETgjmInPBqQeAO2CgjES3T+Q2AbPut7XKhLdQ3wPcLHxCh6+X3pe3cUO6FRo3YS8S3oO9JXt2za5ELCi4GCB4/Ao4md8MiPMgf4KOHnQpEes4ZZNN9L93mmvnGiofH/xYb1Qlo3Kvh9gEXp315OTihk1Xwcm+kdY9RzID3HPcBTpCNfXonHhzztvcC3030hxUajUvul+7ycnBDIqnkTJjaqxzGoAN9K/67p5E57rEhfQw8bQiY27rdxQiCr5iJsekyMtCb5LtTN6b4BndwZHxKAp7Dh8CrhREEV4C2Bjuc4inz/IHAs8abEyMK/A1hDzsXgYjN+dFPXkU02DW2BLIx0XGdqoe7TfCyNSQynsNBxr25672ITgG3EmSsFNjlO6095cJ8zHvLJ4b4C7EG8qTDqlq3GsidoSgREOqETjm7Cds+cqYfCJ87BJlzGzCigRvEq4DWa6q6LTftMI95yLC4yTjvUMav7eCxXkpLAxUAjWz3Af5BlMhh0Mc74kONrIRYgBd7VKStKHxI2uX0y6LhlQ0KzBFtvXl2nWHV0ALOYLgfWM0RAqovN+Mknip5JvCx+TvvszIxKrTt0NukGNWZUYFPSHfCoIZDQvAP4L6w7HnP1Dlk1G4EvMoRVo4ty2kMTJmOIjRJ5OS1SqVhl3+vQdb3bH5l3emNTY3ZvPwO1kN6KhISN1a5koOsH6Z5Ol1V+bfl3A9cDuxI/N5KsmkuAlxlmmo2LzfiQcncDH0j3xQjq+xlWcTwB+jipVGjA+m8WdK5OdqfkjO3H0kZcQWbRxBaaKpao/ws0jUA1X6DTOnr43wHsT7wCfS599e5UGyQ3UEuSqFuny6dO9oD/M+ag7aKYbI8agfoHYAsjjJ66ZdMen4p0XBXW6kjHn1JU/njSzpyXkPRjq6peBhxN5p+JLTQaRl+OddlGzFLglk3rKP/wCVgaiJiO4cea3jsOZHmxlaj/OGyG9dFk3e7YdUYWzVbgdMYw0udi0xpyvr0R+Dxxhjw1ka0XeCLd5/4aB7LlhuSb2Rf4BnAdtsCiMkkWgWJ2zsXq6ag5ub0bNXZkIs4AbsBW0Ixh1ajFWAM8nu5zsZm6qDukJZHAYrtOw1abzWfaKyqFrETtTuBixpj838VmdPLDibOAG7GF62LOmq1gqSt0jsnqc3CGJt8NapCV/77AR7DRptflPi8yT7Ua2FeApWTdp1GtfBeb4VGLooXr9gOuBQ5M38e6d6poWgZ4uL53qH55foG8GP18ibXM/xAoE1yr11E2KrkNsrXK8lbCbMw3eBzwfiypGmS5sIsUGolKFfhz4FlaCMsoQmzyN7Ps6FrzK2ROx3K1noNZNjH7xWo1XgD+L903nFUTY82qGBZUb8Rjt0IZpxQMd02LgIOxxeOOwFZBEBKZThgKqvtnA98hi1QeE0VccNj5KMUxD1vm4mNkGfMUKRkLic1NwGaGLky1JMcCRwF9hPMbqVKHaBx0TYcDX8ICzNqtBwPYPbkCeICxt6p1MsuqLA1fFcsvs0e6vRmL2ToQyz+9c+67suSqdK43Imv+68D5jKN7X8SFz8Gsg7IzG9gTK/BDsBZl9/Qzed5jjt5pFKoPyzuifc3oATsK67/HIKTYvDXdQnI3JjajXafE+nLip1dolQomKDOH+byR+16nR41l0azA/DSqgy01HjHFRjfoMiwVYUw/RwiGurYivfyympZjy5XKXzQcr5J1T0JdXwy/TX4UpV1k+fW2+H+7AwsCXUMMNHM878Mpiyiqfj2MrQS7jXHmWCri4a+nW5lu4HDIQafWpMjrla/owtz7kchfX5nva8hyV7m0Koh9ZLEpZWzwylp+ul9PYWvc99DG6GiRPpsi5mm0g1qUTjnealiA1g8Y3apxWqPCjiM/zshIaJ7GZpA/S5thGEU9WF7QwyNzdAvx5lo5TitIaB7Cuk5rCRDvVWZLY6ogq+Z84EnGGI3pOJGQ0Hwfs2jWEiiw1MWms8jLfzfwr7jQOJ1Dro46NoN7CbCBgBHsLjadQz6sHuBErEWZqDFJzsQmPyjyaeDDZKNOwXyHZfTMTwXyYd/HY5MufQ6UUzQafa1jjd4p2Ny/5omfQXDLpnhUiDXgVOB2shw5jlMUsmbq2NSYwzChUZ6c4Ba2i02xyKKpYXOtLqXF+SWO0yayZhStfi5wJFlOmmh10btRxZFP1Xg22fwSFxqnCPIWdQ24CziTbNpH9NguF5ti0HBiHzax8wq86+QUQ94vUwPWYUnRryQTH2U5iIqLTVzyw4nrsFGn/8G7Tk58JCCaLrQZ+DK2ttMGCrJm8rjYxKG5NbkdOJks5NuFxomFxKOGickW4GpsTacnc58Vvmywi01Y8iJTx1Innoe1KODD20548nMP1biBrTl2HZauREsCqcvUkTroYhOGZpN1O1bIF2DdJ80Lc6FxQiBxScgyKmhkeQWwDFvjuyfdp8RhHa1/LjbjIx/wVM1tW4H/xCyZB9PPO2KyOpOG5oTizelPBoCVwM3AN7HJk6IUIiPqZA9Ou95oHaP5ocoff6LO+9FvUi6V5hwtK7H0EMsozmTN39epMpte9adV4Z4IdTD/m5pTYjSX78vAj4DvYgF5D7CjGHWsuzQcdSxbe4iUl8r63tW0vzs9dnebxy8TL2GFfTdwG3B/7rOiWpMu4qcqLRv6ra1a5BO5DvZg01nWYFbLfVjde6Xpe/kVMkslMqIOPIqNjih8ebz0A9MwxxRkLcgq4BEslWNZM5KNRA+wEXgR+y2PYQX/UtP3VNixC1ot2NPYfQ2Z8LzsKPp6QwvfByu3vShnHawCP8NGjTZj9W0d9hytxqyYF9mxXqmhkdVW+hHO/wc8NPjOa7YKVAAAAABJRU5ErkJggg==" alt="BID">
+</div>
+
+<div class="kpicard"><div class="kpirow">
+  <div class="kpi"><div class="num">$251.771</div><div class="cap">Inversión (ARS)</div></div>
+  <div class="kpi"><div class="num">320</div><div class="cap">Leads únicos</div></div>
+  <div class="kpi"><div class="num">18</div><div class="cap">Pasados a CRM</div>
+    <div class="subcap">Tasa de conversión: 5,6%</div></div>
+  <div class="kpi"><div class="num">$787</div><div class="cap">Costo por lead</div></div>
+  <div class="kpi"><div class="num">0,29%</div><div class="cap">Leads sobre alcance</div>
+    <div class="kpi-note-inline">Cerca o por encima del 1% indica una pauta o producto más atractivo.</div></div>
+</div>
+</div>
+
+<div class="section-label">Pauta e ingreso de leads</div>
+<div class="grid grid-1">
+  <div class="card"><h2>Leads por día (con métricas de Meta Ads)</h2>
+    <p class="explica">Impresiones, alcance, frecuencia, CTR y contactos nuevos de la pauta ese día, junto a los leads que entraron a Kommo.</p>
+    <table><thead><tr><th>Día</th><th>Impresiones</th><th>Alcance</th><th>Frecuencia</th><th>CTR</th><th>Gasto</th><th>Contactos nuevos</th><th>Leads Kommo</th></tr></thead>
+    <tbody><tr><td class='vn'>25/06</td><td>2.800</td><td>2.417</td><td>1.16</td><td>2,2%</td><td>$4.540</td><td>9</td><td><b>3</b></td></tr><tr><td class='vn'>26/06</td><td>2.993</td><td>2.543</td><td>1.18</td><td>2,6%</td><td>$5.058</td><td>12</td><td><b>8</b></td></tr><tr><td class='vn'>27/06</td><td>3.413</td><td>3.169</td><td>1.08</td><td>2,4%</td><td>$6.394</td><td>11</td><td><b>11</b></td></tr><tr><td class='vn'>28/06</td><td>1.254</td><td>1.095</td><td>1.15</td><td>2,6%</td><td>$3.303</td><td>4</td><td><b>12</b></td></tr><tr><td class='vn'>29/06</td><td>1.580</td><td>1.394</td><td>1.13</td><td>1,5%</td><td>$5.118</td><td>10</td><td><b>13</b></td></tr><tr><td class='vn'>30/06</td><td>3.349</td><td>2.928</td><td>1.14</td><td>2,8%</td><td>$5.762</td><td>13</td><td><b>11</b></td></tr><tr><td class='vn'>01/07</td><td>2.558</td><td>2.247</td><td>1.14</td><td>3,1%</td><td>$4.231</td><td>13</td><td><b>11</b></td></tr><tr><td class='vn'>02/07</td><td>2.464</td><td>2.277</td><td>1.08</td><td>2,1%</td><td>$3.648</td><td>8</td><td><b>5</b></td></tr><tr><td class='vn'>03/07</td><td>1.293</td><td>1.223</td><td>1.06</td><td>2,7%</td><td>$2.666</td><td>4</td><td><b>2</b></td></tr><tr><td class='vn'>04/07</td><td>1.849</td><td>1.716</td><td>1.08</td><td>2,8%</td><td>$3.248</td><td>7</td><td><b>5</b></td></tr><tr><td class='vn'>05/07</td><td>1.452</td><td>1.279</td><td>1.14</td><td>2,8%</td><td>$3.172</td><td>5</td><td><b>2</b></td></tr><tr><td class='vn'>06/07</td><td>2.828</td><td>2.559</td><td>1.11</td><td>2,4%</td><td>$5.230</td><td>12</td><td><b>11</b></td></tr><tr><td class='vn'>07/07</td><td>2.305</td><td>2.060</td><td>1.12</td><td>2,3%</td><td>$4.776</td><td>13</td><td><b>8</b></td></tr><tr><td class='vn'>08/07</td><td>2.542</td><td>2.350</td><td>1.08</td><td>2,5%</td><td>$4.171</td><td>6</td><td><b>5</b></td></tr><tr><td class='vn'>09/07</td><td>2.471</td><td>2.255</td><td>1.10</td><td>2,8%</td><td>$3.946</td><td>11</td><td><b>5</b></td></tr><tr><td class='vn'>10/07</td><td>1.515</td><td>1.314</td><td>1.15</td><td>2,8%</td><td>$3.280</td><td>8</td><td><b>8</b></td></tr><tr><td class='vn'>11/07</td><td>1.656</td><td>1.487</td><td>1.11</td><td>2,5%</td><td>$2.799</td><td>6</td><td><b>3</b></td></tr><tr><td class='vn'>12/07</td><td>1.300</td><td>1.105</td><td>1.18</td><td>3,1%</td><td>$3.232</td><td>7</td><td><b>4</b></td></tr><tr><td class='vn'>13/07</td><td>2.912</td><td>2.519</td><td>1.16</td><td>2,3%</td><td>$5.549</td><td>7</td><td><b>7</b></td></tr><tr><td class='vn'>14/07</td><td>4.880</td><td>4.268</td><td>1.14</td><td>2,2%</td><td>$6.048</td><td>18</td><td><b>16</b></td></tr><tr><td class='vn'>15/07</td><td>2.127</td><td>1.865</td><td>1.14</td><td>2,7%</td><td>$3.801</td><td>6</td><td><b>3</b></td></tr><tr><td class='vn'>16/07</td><td>1.794</td><td>1.601</td><td>1.12</td><td>3,1%</td><td>$3.450</td><td>5</td><td><b>1</b></td></tr><tr><td class='vn'>17/07</td><td>1.990</td><td>1.803</td><td>1.10</td><td>2,7%</td><td>$3.456</td><td>11</td><td><b>8</b></td></tr><tr><td class='vn'>18/07</td><td>1.730</td><td>1.580</td><td>1.09</td><td>2,1%</td><td>$2.386</td><td>6</td><td><b>6</b></td></tr><tr><td class='vn'>19/07</td><td>2.020</td><td>1.789</td><td>1.13</td><td>2,2%</td><td>$2.797</td><td>5</td><td><b>5</b></td></tr><tr><td class='vn'>20/07</td><td>2.680</td><td>2.423</td><td>1.11</td><td>2,5%</td><td>$4.259</td><td>4</td><td><b>3</b></td></tr><tr><td class='vn'>21/07</td><td>1.945</td><td>1.753</td><td>1.11</td><td>3,3%</td><td>$5.724</td><td>12</td><td><b>11</b></td></tr><tr><td class='vn'>22/07</td><td>1.297</td><td>1.175</td><td>1.10</td><td>2,9%</td><td>$4.188</td><td>9</td><td><b>7</b></td></tr><tr><td class='vn'>23/07</td><td>925</td><td>854</td><td>1.08</td><td>3,2%</td><td>$3.714</td><td>2</td><td><b>2</b></td></tr><tr><td class='vn'>25/07</td><td>1.375</td><td>1.196</td><td>1.15</td><td>2,8%</td><td>$3.601</td><td>8</td><td><b>3</b></td></tr><tr><td class='vn'>26/07</td><td>971</td><td>850</td><td>1.14</td><td>2,9%</td><td>$3.133</td><td>5</td><td><b>1</b></td></tr><tr><td class='vn'>27/07</td><td>1.583</td><td>1.436</td><td>1.10</td><td>2,3%</td><td>$5.341</td><td>4</td><td><b>1</b></td></tr><tr><td class='vn'>28/07</td><td>2.093</td><td>1.875</td><td>1.12</td><td>2,6%</td><td>$5.464</td><td>8</td><td><b>5</b></td></tr><tr><td class='vn'>29/07</td><td>1.824</td><td>1.608</td><td>1.13</td><td>2,9%</td><td>$4.251</td><td>6</td><td><b>6</b></td></tr><tr><td class='vn'>30/07</td><td>1.921</td><td>1.756</td><td>1.09</td><td>2,7%</td><td>$3.340</td><td>2</td><td><b>2</b></td></tr><tr><td class='vn'>31/07</td><td>1.935</td><td>1.765</td><td>1.10</td><td>2,2%</td><td>$2.989</td><td>2</td><td><b>2</b></td></tr><tr><td class='vn'>01/08</td><td>2.043</td><td>1.811</td><td>1.13</td><td>2,3%</td><td>$3.405</td><td>8</td><td><b>5</b></td></tr><tr><td class='vn'>02/08</td><td>2.016</td><td>1.772</td><td>1.14</td><td>2,0%</td><td>$3.725</td><td>6</td><td><b>4</b></td></tr><tr><td class='vn'>03/08</td><td>2.705</td><td>2.376</td><td>1.14</td><td>2,8%</td><td>$4.864</td><td>8</td><td><b>5</b></td></tr><tr><td class='vn'>04/08</td><td>2.745</td><td>2.437</td><td>1.13</td><td>2,3%</td><td>$4.762</td><td>14</td><td><b>13</b></td></tr><tr><td class='vn'>05/08</td><td>2.194</td><td>1.896</td><td>1.16</td><td>1,8%</td><td>$4.497</td><td>7</td><td><b>7</b></td></tr><tr><td class='vn'>06/08</td><td>1.386</td><td>1.245</td><td>1.11</td><td>2,1%</td><td>$3.139</td><td>5</td><td><b>5</b></td></tr><tr><td class='vn'>07/08</td><td>1.638</td><td>1.472</td><td>1.11</td><td>1,2%</td><td>$3.346</td><td>1</td><td><b>1</b></td></tr><tr><td class='vn'>08/08</td><td>1.753</td><td>1.595</td><td>1.10</td><td>1,6%</td><td>$3.539</td><td>3</td><td><b>3</b></td></tr><tr><td class='vn'>09/08</td><td>427</td><td>397</td><td>1.08</td><td>4,7%</td><td>$2.449</td><td>5</td><td><b>4</b></td></tr><tr><td class='vn'>10/08</td><td>1.228</td><td>1.127</td><td>1.09</td><td>2,9%</td><td>$5.497</td><td>3</td><td><b>2</b></td></tr><tr><td class='vn'>11/08</td><td>2.268</td><td>2.010</td><td>1.13</td><td>1,9%</td><td>$5.471</td><td>9</td><td><b>7</b></td></tr><tr><td class='vn'>12/08</td><td>2.210</td><td>1.881</td><td>1.17</td><td>2,2%</td><td>$4.457</td><td>8</td><td><b>8</b></td></tr><tr><td class='vn'>13/08</td><td>1.531</td><td>1.390</td><td>1.10</td><td>1,8%</td><td>$2.718</td><td>5</td><td><b>4</b></td></tr><tr><td class='vn'>14/08</td><td>2.256</td><td>2.014</td><td>1.12</td><td>2,0%</td><td>$4.072</td><td>3</td><td><b>2</b></td></tr><tr><td class='vn'>15/08</td><td>1.787</td><td>1.643</td><td>1.09</td><td>1,8%</td><td>$2.989</td><td>1</td><td><b>1</b></td></tr><tr><td class='vn'>16/08</td><td>1.117</td><td>1.021</td><td>1.09</td><td>2,1%</td><td>$2.172</td><td>5</td><td><b>4</b></td></tr><tr><td class='vn'>17/08</td><td>1.687</td><td>1.505</td><td>1.12</td><td>2,4%</td><td>$4.110</td><td>3</td><td><b>2</b></td></tr><tr><td class='vn'>18/08</td><td>1.081</td><td>975</td><td>1.11</td><td>2,1%</td><td>$3.516</td><td>3</td><td><b>3</b></td></tr><tr><td class='vn'>19/08</td><td>3.114</td><td>2.760</td><td>1.13</td><td>1,6%</td><td>$6.561</td><td>6</td><td><b>3</b></td></tr><tr><td class='vn'>20/08</td><td>2.096</td><td>1.823</td><td>1.15</td><td>2,8%</td><td>$5.164</td><td>5</td><td><b>4</b></td></tr><tr><td class='vn'>21/08</td><td>1.419</td><td>1.209</td><td>1.17</td><td>1,3%</td><td>$3.429</td><td>5</td><td><b>2</b></td></tr><tr><td class='vn'>22/08</td><td>1.336</td><td>1.210</td><td>1.10</td><td>1,6%</td><td>$2.630</td><td>4</td><td><b>4</b></td></tr><tr><td class='vn'>24/08</td><td>2.553</td><td>2.270</td><td>1.12</td><td>2,2%</td><td>$5.857</td><td>8</td><td><b>7</b></td></tr></tbody></table>
+    <div class="note">Solo se muestran días con al menos 1 lead. "—" significa que el export de Meta Ads no trae desglose diario para esa fecha (por ejemplo, si vino agregado por campaña completa en vez de por día).</div>
+  </div>
+</div>
+
+<div class="grid grid-2">
+  <div class="card"><h2>Del clic a la conversación de WhatsApp</h2>
+    <p class="explica">Recorrido completo desde la impresión del anuncio hasta el lead registrado en Kommo. % sobre impresiones totales.</p>
+    <div class="row"><div class="lbl">Impresiones</div><div class="track"><div class="bar" style="width:100.0%"></div></div><div class="val">122.655 (100,0%)</div></div><div class="row"><div class="lbl">Alcance</div><div class="track"><div class="bar" style="width:89.2%"></div></div><div class="val">109.447 (89,2%)</div></div><div class="row"><div class="lbl">Clics</div><div class="track"><div class="bar" style="width:2.4%"></div></div><div class="val">2.922 (2,4%)</div></div><div class="row"><div class="lbl">Contactos de mensajes (Meta)</div><div class="track"><div class="bar" style="width:2.0%"></div></div><div class="val">497 (0,4%)</div></div><div class="row"><div class="lbl">Leads en Kommo</div><div class="track"><div class="bar" style="width:2.0%"></div></div><div class="val">320 (0,3%)</div></div>
+    <div class="note">CPM $2.053 · CTR 2,4% · CPC $86 · Conversión contacto Meta → lead Kommo: 64,4% (algunos contactos que Meta no cuenta como "nuevos" generan igual una conversación distinta en Kommo, por eso puede superar el 100% sobre los nuevos).</div>
+  </div>
+
+  <div class="card"><h2>Diagnóstico de la pauta (Meta Ads)</h2>
+    <p class="explica">Qué tan eficiente fue el anuncio en sí, más allá de si generó lead o no.</p>
+    <table><thead><tr><th>Métrica</th><th>Valor</th><th>Lectura</th></tr></thead><tbody>
+    <tr><td class='vn'>Frecuencia (impresiones / alcance)</td><td>1.12</td><td>veces que la vio en promedio cada persona</td></tr>
+    <tr><td class='vn'>CPM</td><td>$2.053</td><td>costo por mil impresiones</td></tr>
+    <tr><td class='vn'>CTR</td><td>2,4%</td><td>de las impresiones terminó en clic</td></tr>
+    <tr><td class='vn'>CPC</td><td>$86</td><td>costo por clic</td></tr>
+    <tr><td class='vn'>Costo por contacto de mensaje</td><td>$507</td><td>inversión / contactos totales</td></tr>
+    <tr><td class='vn'>Costo por contacto nuevo</td><td>$614</td><td>inversión / contactos nuevos</td></tr>
+    <tr><td class='vn'>% contactos nuevos vs. totales</td><td>82,5%</td><td>el resto ya había escrito antes</td></tr>
+    <tr><td class='vn'>Costo por lead en Kommo</td><td>$787</td><td>inversión / 320 leads</td></tr>
+    <tr><td class='vn'>Alcance necesario por lead</td><td>1 cada 342</td><td>personas alcanzadas por cada lead conseguido</td></tr>
+    </tbody></table>
+    <div class="note">1 anuncio(s) activo(s) en el período. Con 2+ anuncios en simultáneo, acá se puede marcar fatiga de creatividad (frecuencia alta + CTR bajo) y concentración de gasto en el de peor rendimiento.</div>
+  </div>
+</div>
+
+
+<div class="section-label">Calidad de la conversación (Kommo)</div>
+<div class="grid grid-3">
+  <div class="card"><h2>Composición de la primera ráfaga de mensajes</h2>
+    <p class="explica">Qué combinación de formatos usa el vendedor en el primer bloque de mensajes que le manda al cliente.</p>
+    <div class="row"><div class="lbl">Texto+Multimedia+Link</div><div class="track"><div class="bar" style="width:28.8%"></div></div><div class="val">28,8% (146)</div></div><div class="row"><div class="lbl">Texto</div><div class="track"><div class="bar" style="width:54.4%"></div></div><div class="val">54,4% (68)</div></div><div class="row"><div class="lbl">Texto+Audio+Multimedia+Link</div><div class="track"><div class="bar" style="width:50.9%"></div></div><div class="val">50,9% (55)</div></div><div class="row"><div class="lbl">Texto+Link</div><div class="track"><div class="bar" style="width:34.8%"></div></div><div class="val">34,8% (23)</div></div><div class="row"><div class="lbl">Multimedia</div><div class="track"><div class="bar" style="width:6.2%"></div></div><div class="val">6,2% (16)</div></div><div class="row"><div class="lbl">Texto+Multimedia</div><div class="track"><div class="bar" style="width:57.1%"></div></div><div class="val">57,1% (7)</div></div><div class="row"><div class="lbl">Multimedia+Link</div><div class="track"><div class="bar" style="width:0.0%"></div></div><div class="val">0,0% (1)</div></div><div class="row"><div class="lbl">Audio+Multimedia+Link</div><div class="track"><div class="bar" style="width:100.0%"></div></div><div class="val">100,0% (1)</div></div>
+    <div class="note">Se toma solo el primer conjunto de mensajes seguidos del vendedor/sistema, antes de la primera respuesta del cliente.</div>
+  </div>
+
+  <div class="card"><h2>Avance según cantidad de mensajes en la ráfaga</h2>
+    <p class="explica">Si mandar muchos mensajes seguidos de golpe ayuda o satura al cliente.</p>
+    <div class="row"><div class="lbl">≤2 mensajes</div><div class="track"><div class="bar" style="width:55.0%"></div></div><div class="val">55,0% (240)</div></div><div class="row"><div class="lbl">3 mensajes</div><div class="track"><div class="bar" style="width:32.7%"></div></div><div class="val">32,7% (104)</div></div><div class="row"><div class="lbl">4 mensajes</div><div class="track"><div class="bar" style="width:38.6%"></div></div><div class="val">38,6% (140)</div></div><div class="row"><div class="lbl">5+ mensajes</div><div class="track"><div class="bar" style="width:42.9%"></div></div><div class="val">42,9% (42)</div></div>
+    <div class="note">Ráfaga = mensajes consecutivos del vendedor (excluye automáticos) antes de que hable el cliente.</div>
+  </div>
+
+  <div class="card"><h2>Índice de intención del lead (0-5)</h2>
+    <p class="explica">Qué tan "calientes" llegan los leads de esta campaña, según lo que piden.</p>
+    <div class="row"><div class="lbl">Nivel 0 — Curiosidad (mensaje genérico)</div><div class="track"><div class="bar" style="width:8.8%"></div></div><div class="val">8,8% (28)</div></div><div class="row"><div class="lbl">Nivel 1 — Interés genérico (precio sin especificar)</div><div class="track"><div class="bar" style="width:14.1%"></div></div><div class="val">14,1% (45)</div></div><div class="row"><div class="lbl">Nivel 2 — Interés específico (modelo/producto puntual)</div><div class="track"><div class="bar" style="width:71.2%"></div></div><div class="val">71,2% (228)</div></div><div class="row"><div class="lbl">Nivel 3 — Evaluación (2+ datos técnicos juntos)</div><div class="track"><div class="bar" style="width:1%"></div></div><div class="val">0,9% (3)</div></div><div class="row"><div class="lbl">Nivel 4 — Compra potencial (financiación/envío)</div><div class="track"><div class="bar" style="width:3.1%"></div></div><div class="val">3,1% (10)</div></div><div class="row"><div class="lbl">Nivel 5 — Alta intención (dato de negocio/pago)</div><div class="track"><div class="bar" style="width:1.9%"></div></div><div class="val">1,9% (6)</div></div>
+    <div class="note">Se calcula sobre todos los mensajes del cliente (todas sus sesiones), no solo el primero.</div>
+  </div>
+</div>
+
+<div class="grid grid-2">
+  <div class="card"><h2>Producto consultado (desvío de campaña)</h2>
+    <p class="explica">Si la campaña de Sierras Carniceras General termina generando consultas por otros productos del catálogo.</p>
+    <div class="row"><div class="lbl">Sierra</div><div class="track"><div class="bar" style="width:75.0%"></div></div><div class="val">75,0% (240)</div></div><div class="row"><div class="lbl">Genérico / no especifica producto</div><div class="track"><div class="bar" style="width:24.1%"></div></div><div class="val">24,1% (77)</div></div><div class="row"><div class="lbl">Embutidora</div><div class="track"><div class="bar" style="width:0.3%"></div></div><div class="val">0,3% (1)</div></div><div class="row"><div class="lbl">Cortadora</div><div class="track"><div class="bar" style="width:0.3%"></div></div><div class="val">0,3% (1)</div></div><div class="row"><div class="lbl">Fileteadora</div><div class="track"><div class="bar" style="width:0.3%"></div></div><div class="val">0,3% (1)</div></div>
+    <div class="note">Calculado solo sobre mensajes del cliente.</div>
+  </div>
+
+  <div class="card"><h2>Dónde murió la conversación</h2>
+    <p class="explica">En qué momento se corta la charla (leads que no pasaron a CRM), para ver dónde está la fuga.</p>
+    <div class="row"><div class="lbl">Después de texto</div><div class="track"><div class="bar" style="width:42.5%"></div></div><div class="val">42,5% (136)</div></div><div class="row"><div class="lbl">Después de multimedia</div><div class="track"><div class="bar" style="width:26.2%"></div></div><div class="val">26,2% (84)</div></div><div class="row"><div class="lbl">Después de audio</div><div class="track"><div class="bar" style="width:15.0%"></div></div><div class="val">15,0% (48)</div></div><div class="row"><div class="lbl">Última palabra del cliente</div><div class="track"><div class="bar" style="width:6.6%"></div></div><div class="val">6,6% (21)</div></div><div class="row"><div class="lbl">Después de link</div><div class="track"><div class="bar" style="width:4.1%"></div></div><div class="val">4,1% (13)</div></div>
+    <div class="note">No incluye a los leads que convirtieron a CRM.</div>
+    
+  </div>
+</div>
+
+<div class="grid grid-1">
+  <div class="card"><h2>Alcance por vendedor (a cuántos leads distintos les mandó cada tipo)</h2>
+    <p class="explica">A cuántos leads distintos cada vendedor les envió al menos un mensaje de cada formato.</p>
+    <table><thead><tr><th>Vendedor</th><th>Total leads</th><th>Audio</th><th>Link</th><th>Multimedia</th><th>Texto</th><th>Automático</th></tr></thead><tbody><tr><td class='vn'>Yamila Hardach</td><td><b>113</b></td><td>11</td><td>92</td><td>97</td><td>105</td><td>0</td></tr><tr><td class='vn'>Marcelo Gomez</td><td><b>105</b></td><td>55</td><td>88</td><td>82</td><td>101</td><td>3</td></tr><tr><td class='vn'>Mariana Calgaterra</td><td><b>102</b></td><td>15</td><td>82</td><td>89</td><td>94</td><td>0</td></tr></tbody></table>
+  </div>
+
+  <div class="card"><h2>Efectividad por vendedor, controlando por intención del lead</h2>
+    <p class="explica">Compara a los vendedores contra leads de calidad parecida, no en bruto. Cantidad que pasó a CRM (entre paréntesis, el total de leads con ese nivel de intención).</p>
+    <table><thead><tr><th>Vendedor</th><th>Genérico (0)</th><th>Solo precio (1)</th><th>Intermedio (2-3)</th><th>Alta intención (4-5)</th><th>Total</th></tr></thead><tbody><tr><td class='vn'>Yamila Hardach</td><td>1 (8)</td><td>2 (14)</td><td>8 (87)</td><td>1 (4)</td><td><b>12</b> (113)</td></tr><tr><td class='vn'>Marcelo Gomez</td><td>0 (8)</td><td>0 (16)</td><td>0 (77)</td><td>3 (4)</td><td><b>3</b> (105)</td></tr><tr><td class='vn'>Mariana Calgaterra</td><td>0 (12)</td><td>0 (15)</td><td>2 (67)</td><td>1 (8)</td><td><b>3</b> (102)</td></tr></tbody></table>
+  </div>
+</div>
+
+<div class="note" style="margin-top:28px;border-top:3px solid var(--gris);padding-top:14px;">
+  BID Argentina S.A. · Fuentes: export de Meta Ads y Kommo CRM para el período indicado.
+</div>
+
+</body></html>
