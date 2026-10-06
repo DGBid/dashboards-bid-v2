@@ -1,0 +1,3 @@
+El dashboard HTML de esta carpeta debe llamarse exactamente:
+
+Dashboard Analisis Bot.html
