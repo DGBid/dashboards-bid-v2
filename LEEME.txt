@@ -1,0 +1,15 @@
+ACTUALIZACIÓN BID 06/10/2026
+
+Subí EL CONTENIDO de este ZIP a la raíz del repositorio.
+
+Incluye:
+- index.html principal actualizado
+- índices de categorías afectadas
+- índices de campañas nuevas/actualizadas
+- archivo NOMBRES-DE-ARCHIVOS.txt dentro de cada campaña
+
+Convención:
+Meta Nombre de la campaña Dashboard Ventas.html = solo Kommo / resultados de vendedores
+Meta Nombre de la campaña Dashboard.html = Kommo + Meta
+
+No incluye dashboards placeholder, así que no pisa tus HTML finales.
