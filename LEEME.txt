@@ -1,15 +1,13 @@
-ACTUALIZACIÓN BID 06/10/2026
+PARCHE BID 27/10/2026
 
-Subí EL CONTENIDO de este ZIP a la raíz del repositorio.
+Agrega:
+- Análisis Del Bot > Finde Del 10 Al 13 De Octubre
+- Análisis Del Bot > Finde Del 24 Al 26 De Octubre
+- Envasadoras Al Vacío > Envasadora 850
+- Peladora De Papas > Peladoras De Papas
+- Picadoras > Picadora 32 Y 42
 
-Incluye:
-- index.html principal actualizado
-- índices de categorías afectadas
-- índices de campañas nuevas/actualizadas
-- archivo NOMBRES-DE-ARCHIVOS.txt dentro de cada campaña
+También actualiza el index principal A-Z.
 
-Convención:
-Meta Nombre de la campaña Dashboard Ventas.html = solo Kommo / resultados de vendedores
-Meta Nombre de la campaña Dashboard.html = Kommo + Meta
-
-No incluye dashboards placeholder, así que no pisa tus HTML finales.
+No incluye dashboards reales. No los pisa.
+Subí EL CONTENIDO del ZIP a la raíz del repositorio.
