@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Meta Envasadora 850 · Dashboard de ventas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --negro:#1D1D1C; --amarillo:#FFCC29; --fondo:#ECECE7; --panel:#FFFFFF;
+    --texto:#1D1D1C; --suave:#66665F; --linea:#DDDDD6; --pista:#E4E4DE; --resalte:#FFF6D6;
+    --verde:#8FE0A0; --rojo:#FF9C8F;
+  }
+  * { box-sizing:border-box; }
+  html { scroll-behavior:smooth; }
+  body { margin:0; background:var(--fondo); color:var(--texto);
+    font-family:'Montserrat',-apple-system,'Segoe UI',sans-serif; font-variant-numeric:tabular-nums;
+    -webkit-font-smoothing:antialiased; }
+  .filtro-radio { position:absolute; opacity:0; pointer-events:none; }
+  .pagina { max-width:1320px; margin:0 auto; padding:40px 40px 72px; }
+
+  /* encabezado */
+  .cabecera { display:flex; justify-content:space-between; align-items:flex-end; gap:24px; flex-wrap:wrap; }
+  .antetitulo { font-size:14px; font-weight:600; color:var(--suave); margin:0 0 8px; }
+  h1 { font-size:44px; line-height:1; font-weight:900; letter-spacing:-.035em; margin:0; }
+  .periodo { font-size:14px; color:var(--suave); margin:12px 0 0; font-weight:500; }
+  .logo { height:58px; width:auto; display:block; }
+
+  /* barra de filtro (queda fija arriba al bajar) */
+  .filtros { position:sticky; top:0; z-index:5; margin:28px -12px 0; padding:12px;
+    background:rgba(236,236,231,.92); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); }
+  .filtros-in { display:flex; align-items:center; gap:10px; overflow-x:auto; scrollbar-width:none; }
+  .filtros-in::-webkit-scrollbar { display:none; }
+  .filtros-lbl { font-size:13px; font-weight:600; color:var(--suave); margin-right:4px; white-space:nowrap; }
+  .pill { display:inline-flex; align-items:center; gap:8px; padding:9px 12px 9px 16px; border-radius:999px;
+    border:1.5px solid var(--linea); background:var(--panel); font-size:14px; font-weight:600; cursor:pointer;
+    white-space:nowrap; transition:background .15s, color .15s, border-color .15s; user-select:none; }
+  .pill:hover { border-color:var(--negro); }
+  .pill-n { font-size:12px; font-weight:700; background:var(--pista); color:var(--texto); border-radius:999px; padding:2px 8px; }
+
+  /* KPIs */
+  .vista { display:none; }
+  .franja { height:10px; border-radius:12px 12px 0 0;
+    background:repeating-linear-gradient(135deg,var(--negro) 0 12px,var(--amarillo) 12px 24px); }
+  .kpis { background:var(--negro); color:#fff; display:grid; grid-template-columns:repeat(5,minmax(0,1fr));
+    border-radius:0 0 14px 14px; padding:30px 6px 30px; margin-bottom:24px; }
+  .kpi { padding:0 24px; border-left:1px solid rgba(255,255,255,.13); display:flex; flex-direction:column; }
+  .kpi:first-child { border-left:none; }
+  .kpi-num { font-size:48px; font-weight:800; color:var(--amarillo); letter-spacing:-.035em; line-height:1; }
+  .kpi-nom { font-size:14px; font-weight:600; color:#EDEDE8; margin-top:12px; }
+  .kpi-sub { font-size:13px; font-weight:500; color:#A6A69F; margin-top:4px; }
+  .kpi-delta { font-size:12.5px; font-weight:600; color:#C9C9C2; margin-top:8px; min-height:1.3em; }
+  .kpi-delta.arriba { color:var(--verde); }
+  .kpi-delta.abajo { color:var(--rojo); }
+  .medidor { display:block; height:5px; background:rgba(255,255,255,.14); border-radius:3px; margin-top:12px; overflow:hidden; }
+  .medidor span { display:block; height:100%; background:var(--amarillo); border-radius:3px; }
+
+  /* paneles */
+  .grilla { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:22px; }
+  .panel { background:var(--panel); border:1px solid var(--linea); border-radius:14px; padding:28px 30px 22px; min-width:0;
+    display:flex; flex-direction:column; }
+  .ancho { margin-top:22px; }
+  h2 { font-size:19px; font-weight:700; letter-spacing:-.015em; margin:0 0 6px; }
+  .bajada { font-size:13.5px; line-height:1.5; color:var(--suave); margin:0 0 22px; max-width:64ch; font-weight:500; }
+  .vacio { color:var(--suave); font-size:13.5px; }
+  details { margin-top:auto; padding-top:18px; }
+  summary { font-size:13px; font-weight:600; color:var(--suave); cursor:pointer; list-style:none; display:inline-flex;
+    align-items:center; gap:7px; border-radius:6px; }
+  summary::-webkit-details-marker { display:none; }
+  summary::before { content:'?'; display:inline-grid; place-items:center; width:18px; height:18px; border-radius:50%;
+    border:1.5px solid currentColor; font-size:11px; font-weight:800; }
+  summary:hover { color:var(--texto); }
+  summary:focus-visible { outline:3px solid var(--amarillo); outline-offset:3px; }
+  details[open] summary { color:var(--texto); }
+  details p { font-size:13px; line-height:1.6; color:var(--suave); margin:10px 0 0; max-width:70ch; font-weight:500; }
+  .lectura { font-size:13.5px; line-height:1.55; margin:22px 0 0; padding:2px 0 2px 14px; border-left:3px solid var(--amarillo);
+    font-weight:500; max-width:64ch; }
+  .lectura strong { font-weight:700; }
+  .aviso { font-size:13px; line-height:1.55; margin:18px 0 0; padding:12px 14px; border-radius:10px;
+    background:var(--resalte); border:1px solid #F2DE9A; font-weight:500; }
+  .aviso strong { font-weight:700; }
+
+  /* barras horizontales */
+  .barras { display:grid; gap:6px; }
+  .fila { position:relative; display:grid; grid-template-columns:minmax(0,1fr) minmax(70px,30%) 100px; align-items:center;
+    gap:14px; padding:7px 8px; margin:0 -8px; border-radius:8px; }
+  .fila:hover { background:#F6F6F2; }
+  .fila.chica { opacity:.5; }
+  .etq { font-size:14px; font-weight:500; line-height:1.3; display:flex; align-items:center; flex-wrap:wrap; gap:6px; }
+  .pista { position:relative; display:block; height:10px; background:var(--pista); border-radius:5px; }
+  .barra { display:block; height:100%; background:var(--negro); border-radius:5px; }
+  .valor { font-size:14px; font-weight:700; text-align:right; white-space:nowrap; }
+  .n { font-weight:500; color:var(--suave); margin-left:5px; font-size:12.5px; }
+  .insignia { font-size:11px; font-weight:700; background:var(--amarillo); color:var(--negro); border-radius:999px;
+    padding:2px 8px; white-space:nowrap; }
+  .chips { display:inline-flex; flex-wrap:wrap; gap:4px; }
+  .chip { display:inline-flex; align-items:center; gap:4px; font-size:12px; font-weight:600; padding:3px 8px 3px 6px;
+    border-radius:6px; background:#F1F1EC; border:1px solid var(--linea); white-space:nowrap; }
+  .chip svg { width:13px; height:13px; fill:none; stroke:currentColor; stroke-width:1.6; stroke-linecap:round; stroke-linejoin:round; }
+
+  /* tooltips */
+  [data-tip]:hover::after { content:attr(data-tip); position:absolute; z-index:4; left:50%; bottom:calc(100% + 6px);
+    transform:translateX(-50%); background:var(--negro); color:#fff; font-size:12px; font-weight:600; padding:7px 10px;
+    border-radius:7px; white-space:nowrap; pointer-events:none; box-shadow:0 6px 18px rgba(0,0,0,.18); }
+
+  /* columnas: leads por día */
+  .columnas { display:flex; align-items:stretch; gap:8px; height:250px; padding-top:22px; }
+  .col { position:relative; flex:1 1 0; min-width:0; display:flex; flex-direction:column; align-items:center; }
+  .col-zona { flex:1; width:100%; display:flex; align-items:flex-end; justify-content:center; border-bottom:1.5px solid var(--negro); }
+  .col-barra { position:relative; display:block; width:min(100%,40px); background:var(--negro); border-radius:5px 5px 0 0; }
+  .col.finde .col-barra { background:var(--amarillo); box-shadow:inset 0 0 0 1.5px var(--negro); }
+  .col:hover .col-barra { filter:brightness(1.35); }
+  .col-val { position:absolute; left:50%; bottom:100%; transform:translateX(-50%); margin-bottom:5px;
+    font-size:13px; font-weight:700; white-space:nowrap; }
+  .col-fecha { display:flex; flex-direction:column; align-items:center; font-size:11.5px; color:var(--suave); font-weight:600;
+    margin-top:8px; min-height:30px; white-space:nowrap; line-height:1.25; }
+  .col-dia { font-weight:500; }
+  .columnas.densa { gap:2px; }
+  .columnas.densa .col-barra { border-radius:2px 2px 0 0; }
+  .columnas.densa .col-fecha { overflow:visible; }
+  .leyenda { display:flex; align-items:center; gap:8px; font-size:12.5px; color:var(--suave); font-weight:500; margin:16px 0 0; }
+  .muestra-finde { width:12px; height:12px; border-radius:3px; background:var(--amarillo); box-shadow:inset 0 0 0 1.5px var(--negro); }
+
+  /* tabla de vendedores */
+  .tabla-scroll { overflow-x:auto; }
+  table { width:100%; border-collapse:collapse; min-width:560px; }
+  col.c-nom { width:40%; } col.c-leads { width:18%; } col.c-crm { width:22%; }
+  th { text-align:left; font-size:12.5px; font-weight:600; color:var(--suave); padding:0 14px 12px 0; border-bottom:1px solid var(--linea); }
+  td { padding:14px 14px 14px 0; border-bottom:1px solid var(--linea); vertical-align:middle; font-size:15px; transition:background .15s; }
+  td:first-child { padding-left:12px; } th:first-child { padding-left:12px; }
+  .num, th.num { text-align:right; }
+  .vnom { display:inline-flex; align-items:center; gap:12px; font-weight:700; }
+  label.vnom { cursor:pointer; }
+  label.vnom:hover { text-decoration:underline; text-underline-offset:3px; }
+  .avatar { width:36px; height:36px; border-radius:50%; background:var(--negro); color:var(--amarillo); display:inline-grid;
+    place-items:center; font-size:13px; font-weight:800; letter-spacing:.02em; flex:0 0 auto; }
+  .avance-pct { position:relative; cursor:default; }
+  .grande { font-size:22px; font-weight:800; letter-spacing:-.02em; }
+  .solo-movil { display:none; }
+  .pct-suave { display:block; font-size:12.5px; font-weight:500; color:var(--suave); margin-top:2px; }
+  tr.total td { border-bottom:none; border-top:2px solid var(--negro); }
+  tr.total .vnom { font-weight:800; padding-left:48px; }
+
+  #f-0:checked ~ .pagina .v-0 { display:block; }
+  #f-0:checked ~ .pagina .p-0 { background:var(--negro); color:var(--amarillo); border-color:var(--negro); }
+  #f-0:checked ~ .pagina .p-0 .pill-n { background:var(--amarillo); color:var(--negro); }
+  #f-0:focus-visible ~ .pagina .p-0 { outline:3px solid var(--amarillo); outline-offset:2px; }
+  #f-0:checked ~ .pagina .fv-0, #f-0:checked ~ .pagina .fv-0 td { background:var(--resalte); }
+  #f-0:checked ~ .pagina .fv-0 td:first-child { box-shadow:inset 4px 0 0 var(--amarillo); }
+  #f-1:checked ~ .pagina .v-1 { display:block; }
+  #f-1:checked ~ .pagina .p-1 { background:var(--negro); color:var(--amarillo); border-color:var(--negro); }
+  #f-1:checked ~ .pagina .p-1 .pill-n { background:var(--amarillo); color:var(--negro); }
+  #f-1:focus-visible ~ .pagina .p-1 { outline:3px solid var(--amarillo); outline-offset:2px; }
+  #f-1:checked ~ .pagina .fv-1, #f-1:checked ~ .pagina .fv-1 td { background:var(--resalte); }
+  #f-1:checked ~ .pagina .fv-1 td:first-child { box-shadow:inset 4px 0 0 var(--amarillo); }
+  #f-2:checked ~ .pagina .v-2 { display:block; }
+  #f-2:checked ~ .pagina .p-2 { background:var(--negro); color:var(--amarillo); border-color:var(--negro); }
+  #f-2:checked ~ .pagina .p-2 .pill-n { background:var(--amarillo); color:var(--negro); }
+  #f-2:focus-visible ~ .pagina .p-2 { outline:3px solid var(--amarillo); outline-offset:2px; }
+  #f-2:checked ~ .pagina .fv-2, #f-2:checked ~ .pagina .fv-2 td { background:var(--resalte); }
+  #f-2:checked ~ .pagina .fv-2 td:first-child { box-shadow:inset 4px 0 0 var(--amarillo); }
+  #f-3:checked ~ .pagina .v-3 { display:block; }
+  #f-3:checked ~ .pagina .p-3 { background:var(--negro); color:var(--amarillo); border-color:var(--negro); }
+  #f-3:checked ~ .pagina .p-3 .pill-n { background:var(--amarillo); color:var(--negro); }
+  #f-3:focus-visible ~ .pagina .p-3 { outline:3px solid var(--amarillo); outline-offset:2px; }
+  #f-3:checked ~ .pagina .fv-3, #f-3:checked ~ .pagina .fv-3 td { background:var(--resalte); }
+  #f-3:checked ~ .pagina .fv-3 td:first-child { box-shadow:inset 4px 0 0 var(--amarillo); }
+  #f-4:checked ~ .pagina .v-4 { display:block; }
+  #f-4:checked ~ .pagina .p-4 { background:var(--negro); color:var(--amarillo); border-color:var(--negro); }
+  #f-4:checked ~ .pagina .p-4 .pill-n { background:var(--amarillo); color:var(--negro); }
+  #f-4:focus-visible ~ .pagina .p-4 { outline:3px solid var(--amarillo); outline-offset:2px; }
+  #f-4:checked ~ .pagina .fv-4, #f-4:checked ~ .pagina .fv-4 td { background:var(--resalte); }
+  #f-4:checked ~ .pagina .fv-4 td:first-child { box-shadow:inset 4px 0 0 var(--amarillo); }
+
+  @media (prefers-reduced-motion:reduce) { * { transition:none !important; scroll-behavior:auto !important; } }
+  @media (max-width:1100px) {
+    .kpis { grid-template-columns:repeat(3,minmax(0,1fr)); row-gap:30px; }
+    .kpi:nth-child(4) { border-left:none; }
+  }
+  @media (max-width:820px) {
+    .pagina { padding:22px 16px 56px; }
+    h1 { font-size:31px; }
+    .logo { height:42px; }
+    .filtros { margin:18px -16px 0; padding:10px 16px; }
+    .grilla { grid-template-columns:minmax(0,1fr); gap:16px; }
+    .kpis { grid-template-columns:repeat(2,minmax(0,1fr)); padding:24px 0; row-gap:26px; }
+    .kpi { padding:0 18px; border-left:none; }
+    .kpi-num { font-size:36px; }
+    .panel { padding:22px 18px 18px; }
+    .fila { grid-template-columns:minmax(0,1fr) 64px 88px; gap:10px; }
+    .columnas { height:210px; gap:4px; }
+    .col-val { font-size:11.5px; }
+    .col-fecha { font-size:10px; }
+    .ancho { margin-top:16px; }
+    [data-tip]:hover::after { display:none; }
+    .tabla-scroll { overflow:visible; }
+    table { min-width:0; }
+    colgroup, thead { display:none; }
+    table, tbody { display:block; }
+    tr { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px 12px; align-items:start;
+      padding:14px 10px; border-bottom:1px solid var(--linea); border-radius:10px; }
+    td, td:first-child { display:block; padding:0; border:none !important; background:transparent !important; box-shadow:none !important; text-align:left !important; }
+    td:first-child { grid-column:1 / -1; }
+    td .grande, td.grande { font-size:19px; }
+    .solo-movil { display:block; font-size:12px; font-weight:600; color:var(--suave); letter-spacing:0; margin-top:2px; }
+    td:nth-child(4) .pct-suave { display:none; }
+    tr.total { border-top:2px solid var(--negro); border-bottom:none; border-radius:0; }
+    tr.total .vnom { padding-left:0; }
+  }
+</style></head>
+<body>
+<input type='radio' name='filtro' id='f-0' class='filtro-radio' checked><input type='radio' name='filtro' id='f-1' class='filtro-radio'><input type='radio' name='filtro' id='f-2' class='filtro-radio'><input type='radio' name='filtro' id='f-3' class='filtro-radio'><input type='radio' name='filtro' id='f-4' class='filtro-radio'>
+<main class="pagina">
+  <header class="cabecera">
+    <div>
+      <p class="antetitulo">Análisis de campaña</p>
+      <h1>Meta Envasadora 850</h1>
+      <p class="periodo">Leads que entraron del 06/10/2026 al 15/10/2026</p>
+    </div>
+    <img class="logo" src="data:image/png;base64,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" alt="BID Argentina">
+  </header>
+
+  <nav class="filtros" aria-label="Filtrar por vendedor">
+    <div class="filtros-in"><span class="filtros-lbl">Ver</span><label for='f-0' class='pill p-0'>Todo el equipo<span class='pill-n'>95</span></label><label for='f-1' class='pill p-1'>Marcelo Gomez<span class='pill-n'>45</span></label><label for='f-2' class='pill p-2'>Yamila Hardach<span class='pill-n'>20</span></label><label for='f-3' class='pill p-3'>Mariana Calgaterra<span class='pill-n'>29</span></label><label for='f-4' class='pill p-4'>(sin asignar)<span class='pill-n'>1</span></label></div>
+  </nav>
+
+  <div class="franja" aria-hidden="true"></div>
+
+  <div class="vista v-0">
+    
+    <section class="kpis" aria-label="Resumen">
+      <div class="kpi"><span class="kpi-num">95</span><span class="kpi-nom">Leads únicos</span>
+        <span class="kpi-sub">&nbsp;</span><span class='kpi-delta'></span></div>
+      <div class="kpi"><span class="kpi-num">3</span><span class="kpi-nom">Pasados a CRM</span>
+        <span class="kpi-sub">&nbsp;</span><span class='kpi-delta'></span></div>
+      <div class="kpi"><span class="kpi-num">3.2%</span><span class="kpi-nom">Tasa de conversión</span>
+        <span class='medidor'><span style='width:3.2%'></span></span><span class="kpi-sub">3 de 95 leads</span><span class='kpi-delta'></span></div>
+      <div class="kpi"><span class="kpi-num">37.9%</span><span class="kpi-nom">Avance en la conversación</span>
+        <span class='medidor'><span style='width:37.9%'></span></span><span class="kpi-sub">36 leads avanzaron</span><span class='kpi-delta'></span></div>
+      <div class="kpi"><span class="kpi-num">100.0%</span><span class="kpi-nom">Recibieron un mensaje</span>
+        <span class='medidor'><span style='width:100.0%'></span></span><span class="kpi-sub">95 de 95 leads</span><span class='kpi-delta'></span></div>
+    </section>
+    <div class="grilla">
+      <section class="panel">
+        <h2>Tasa de respuesta del cliente por tipo de mensaje</h2>
+        <p class="bajada">Qué combinación de mensajes conviene usar para abrir la conversación.</p>
+        <div class='barras'><div class='fila' data-tip='Respondieron 11 de 34 leads'><span class='etq'><span class="chips"><span class="chip"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 4.5h10M3 8h10M3 11.5h6"/></svg>Texto</span><span class="chip"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6.8 9.2l2.4-2.4"/><path d="M7.4 4.6l1.1-1.1a2.6 2.6 0 0 1 3.7 3.7l-1.1 1.1"/><path d="M8.6 11.4l-1.1 1.1a2.6 2.6 0 0 1-3.7-3.7l1.1-1.1"/></svg>Link</span><span class="chip"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="2.2" y="3" width="11.6" height="10" rx="1.6"/><path d="M2.6 11.2l3.3-3.3 2.8 2.8 1.9-1.9 3 3"/></svg>Multimedia</span></span></span><span class='pista'><span class='barra' style='width:32.4%'></span></span><span class='valor'>32.4%<span class='n'>(34)</span></span></div><div class='fila' data-tip='Respondieron 16 de 30 leads'><span class='etq'><span class="chips"><span class="chip"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 4.5h10M3 8h10M3 11.5h6"/></svg>Texto</span><span class="chip"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6.8 9.2l2.4-2.4"/><path d="M7.4 4.6l1.1-1.1a2.6 2.6 0 0 1 3.7 3.7l-1.1 1.1"/><path d="M8.6 11.4l-1.1 1.1a2.6 2.6 0 0 1-3.7-3.7l1.1-1.1"/></svg>Link</span><span class="chip"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="2.2" y="3" width="11.6" height="10" rx="1.6"/><path d="M2.6 11.2l3.3-3.3 2.8 2.8 1.9-1.9 3 3"/></svg>Multimedia</span><span class="chip"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="6" y="1.8" width="4" height="8" rx="2"/><path d="M3.8 7.6a4.2 4.2 0 0 0 8.4 0M8 11.8v2.4"/></svg>Audio</span></span></span><span class='pista'><span class='barra' style='width:53.3%'></span></span><span class='valor'>53.3%<span class='n'>(30)</span></span></div><div class='fila' data-tip='Respondieron 11 de 13 leads'><span class='etq'><span class="chips"><span class="chip"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 4.5h10M3 8h10M3 11.5h6"/></svg>Texto</span></span><span class='insignia'>Mejor</span></span><span class='pista'><span class='barra' style='width:84.6%'></span></span><span class='valor'>84.6%<span class='n'>(13)</span></span></div><div class='fila' data-tip='Respondieron 2 de 9 leads'><span class='etq'><span class="chips"><span class="chip"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M9.2 1.8L4 9h4l-1.2 5.2L12 7H8z"/></svg>Automático</span></span></span><span class='pista'><span class='barra' style='width:22.2%'></span></span><span class='valor'>22.2%<span class='n'>(9)</span></span></div><div class='fila' data-tip='Respondieron 1 de 7 leads'><span class='etq'><span class="chips"><span class="chip"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M9.2 1.8L4 9h4l-1.2 5.2L12 7H8z"/></svg>Automático</span><span class="chip"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 4.5h10M3 8h10M3 11.5h6"/></svg>Texto</span></span></span><span class='pista'><span class='barra' style='width:14.3%'></span></span><span class='valor'>14.3%<span class='n'>(7)</span></span></div><div class='fila chica' data-tip='Respondieron 1 de 1 lead · muestra chica'><span class='etq'><span class="chips"><span class="chip"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 4.5h10M3 8h10M3 11.5h6"/></svg>Texto</span><span class="chip"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6.8 9.2l2.4-2.4"/><path d="M7.4 4.6l1.1-1.1a2.6 2.6 0 0 1 3.7 3.7l-1.1 1.1"/><path d="M8.6 11.4l-1.1 1.1a2.6 2.6 0 0 1-3.7-3.7l1.1-1.1"/></svg>Link</span><span class="chip"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="6" y="1.8" width="4" height="8" rx="2"/><path d="M3.8 7.6a4.2 4.2 0 0 0 8.4 0M8 11.8v2.4"/></svg>Audio</span></span></span><span class='pista'><span class='barra' style='width:100.0%'></span></span><span class='valor'>100.0%<span class='n'>(1)</span></span></div><div class='fila chica' data-tip='Respondieron 0 de 1 lead · muestra chica'><span class='etq'><span class="chips"><span class="chip"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6.8 9.2l2.4-2.4"/><path d="M7.4 4.6l1.1-1.1a2.6 2.6 0 0 1 3.7 3.7l-1.1 1.1"/><path d="M8.6 11.4l-1.1 1.1a2.6 2.6 0 0 1-3.7-3.7l1.1-1.1"/></svg>Link</span><span class="chip"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="2.2" y="3" width="11.6" height="10" rx="1.6"/><path d="M2.6 11.2l3.3-3.3 2.8 2.8 1.9-1.9 3 3"/></svg>Multimedia</span><span class="chip"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="6" y="1.8" width="4" height="8" rx="2"/><path d="M3.8 7.6a4.2 4.2 0 0 0 8.4 0M8 11.8v2.4"/></svg>Audio</span></span></span><span class='pista'><span class='barra' style='width:0.0%'></span></span><span class='valor'>0.0%<span class='n'>(1)</span></span></div></div>
+        <p class='lectura'>La combinación más usada, <strong>Texto + Link + Multimedia</strong>, logra 32.4% de respuesta. <strong>Texto</strong> llega a 84.6%.</p>
+        <details><summary>Cómo se calcula</summary><p>Se toma la primera ráfaga del vendedor en cada lead (una combinación por lead). Responde = el cliente escribe justo después. Entre paréntesis, a cuántos leads se les mandó esa combinación. Las filas atenuadas tienen menos de 5 casos.</p></details>
+      </section>
+
+      <section class="panel">
+        <h2>Avance según cantidad de mensajes en la ráfaga</h2>
+        <p class="bajada">Si mandar muchos mensajes seguidos ayuda o satura al cliente.</p>
+        <div class='barras'><div class='fila' data-tip='Avanzaron 14 de 25 leads'><span class='etq'>≤2 mensajes<span class='insignia'>Mejor</span></span><span class='pista'><span class='barra' style='width:56.0%'></span></span><span class='valor'>56.0%<span class='n'>(25)</span></span></div><div class='fila' data-tip='Avanzaron 5 de 36 leads'><span class='etq'>3 mensajes</span><span class='pista'><span class='barra' style='width:13.9%'></span></span><span class='valor'>13.9%<span class='n'>(36)</span></span></div><div class='fila' data-tip='Avanzaron 16 de 32 leads'><span class='etq'>4 mensajes</span><span class='pista'><span class='barra' style='width:50.0%'></span></span><span class='valor'>50.0%<span class='n'>(32)</span></span></div><div class='fila chica' data-tip='Avanzaron 1 de 2 leads · muestra chica'><span class='etq'>5+ mensajes</span><span class='pista'><span class='barra' style='width:50.0%'></span></span><span class='valor'>50.0%<span class='n'>(2)</span></span></div></div>
+        <p class='lectura'>Con <strong>≤2 mensajes</strong> avanza el 56.0% de los leads; con <strong>3 mensajes</strong>, el 13.9%.</p>
+        <details><summary>Cómo se calcula</summary><p>Ráfaga = mensajes seguidos del vendedor antes de que conteste el cliente. El porcentaje es cuántos de esos leads avanzaron; entre paréntesis, cuántos leads recibieron esa cantidad.</p></details>
+      </section>
+
+      <section class="panel">
+        <h2>Leads por día</h2>
+        <p class="bajada">Leads nuevos por día, según la fecha del primer mensaje del cliente.</p>
+        <div class='columnas'><div class='col' data-tip='mar 06/10/2026: 7 leads'><span class='col-zona'><span class='col-barra' style='height:50.0%'><span class='col-val'>7</span></span></span><span class='col-fecha'><span class='col-dia'>mar</span>06/10</span></div><div class='col' data-tip='mié 07/10/2026: 13 leads'><span class='col-zona'><span class='col-barra' style='height:92.9%'><span class='col-val'>13</span></span></span><span class='col-fecha'><span class='col-dia'>mié</span>07/10</span></div><div class='col' data-tip='jue 08/10/2026: 14 leads'><span class='col-zona'><span class='col-barra' style='height:100.0%'><span class='col-val'>14</span></span></span><span class='col-fecha'><span class='col-dia'>jue</span>08/10</span></div><div class='col' data-tip='vie 09/10/2026: 9 leads'><span class='col-zona'><span class='col-barra' style='height:64.3%'><span class='col-val'>9</span></span></span><span class='col-fecha'><span class='col-dia'>vie</span>09/10</span></div><div class='col finde' data-tip='sáb 10/10/2026: 9 leads'><span class='col-zona'><span class='col-barra' style='height:64.3%'><span class='col-val'>9</span></span></span><span class='col-fecha'><span class='col-dia'>sáb</span>10/10</span></div><div class='col finde' data-tip='dom 11/10/2026: 10 leads'><span class='col-zona'><span class='col-barra' style='height:71.4%'><span class='col-val'>10</span></span></span><span class='col-fecha'><span class='col-dia'>dom</span>11/10</span></div><div class='col' data-tip='lun 12/10/2026: 13 leads'><span class='col-zona'><span class='col-barra' style='height:92.9%'><span class='col-val'>13</span></span></span><span class='col-fecha'><span class='col-dia'>lun</span>12/10</span></div><div class='col' data-tip='mar 13/10/2026: 9 leads'><span class='col-zona'><span class='col-barra' style='height:64.3%'><span class='col-val'>9</span></span></span><span class='col-fecha'><span class='col-dia'>mar</span>13/10</span></div><div class='col' data-tip='mié 14/10/2026: 5 leads'><span class='col-zona'><span class='col-barra' style='height:35.7%'><span class='col-val'>5</span></span></span><span class='col-fecha'><span class='col-dia'>mié</span>14/10</span></div><div class='col' data-tip='jue 15/10/2026: 6 leads'><span class='col-zona'><span class='col-barra' style='height:42.9%'><span class='col-val'>6</span></span></span><span class='col-fecha'><span class='col-dia'>jue</span>15/10</span></div></div><p class='leyenda'><span class='muestra-finde'></span>Sábado o domingo</p>
+        <p class='lectura'>El pico fue el <strong>jue 08/10</strong>, con 14 leads. Los fines de semana entraron 19 leads en 2 días.</p>
+      </section>
+
+      <section class="panel">
+        <h2>Dónde murió la conversación</h2>
+        <p class="bajada">En qué momento se corta la charla, para ver dónde está la fuga.</p>
+        <div class='barras'><div class='fila' data-tip='28 de 92 conversaciones'><span class='etq'>Después de multimedia<span class='insignia'>Mayor fuga</span></span><span class='pista'><span class='barra' style='width:30.4%'></span></span><span class='valor'>30.4%<span class='n'>(28)</span></span></div><div class='fila' data-tip='20 de 92 conversaciones'><span class='etq'>Después de automático</span><span class='pista'><span class='barra' style='width:21.7%'></span></span><span class='valor'>21.7%<span class='n'>(20)</span></span></div><div class='fila' data-tip='17 de 92 conversaciones'><span class='etq'>Después de audio</span><span class='pista'><span class='barra' style='width:18.5%'></span></span><span class='valor'>18.5%<span class='n'>(17)</span></span></div><div class='fila' data-tip='14 de 92 conversaciones'><span class='etq'>Después de texto</span><span class='pista'><span class='barra' style='width:15.2%'></span></span><span class='valor'>15.2%<span class='n'>(14)</span></span></div><div class='fila' data-tip='12 de 92 conversaciones'><span class='etq'>Última palabra del cliente</span><span class='pista'><span class='barra' style='width:13.0%'></span></span><span class='valor'>13.0%<span class='n'>(12)</span></span></div><div class='fila chica' data-tip='1 de 92 conversaciones · muestra chica'><span class='etq'>Después de link</span><span class='pista'><span class='barra' style='width:1.1%'></span></span><span class='valor'>1.1%<span class='n'>(1)</span></span></div></div>
+        
+        <details><summary>Cómo se calcula</summary><p>Se mira quién mandó el último mensaje y de qué tipo era. No incluye los leads que pasaron a CRM.</p></details>
+      </section>
+    </div>
+  </div>
+  <div class="vista v-1">
+    
+    <section class="kpis" aria-label="Resumen">
+      <div class="kpi"><span class="kpi-num">45</span><span class="kpi-nom">Leads únicos</span>
+        <span class="kpi-sub">&nbsp;</span><span class='kpi-delta'>47% de los leads del equipo</span></div>
+      <div class="kpi"><span class="kpi-num">3</span><span class="kpi-nom">Pasados a CRM</span>
+        <span class="kpi-sub">&nbsp;</span><span class='kpi-delta'>de 3 del equipo</span></div>
+      <div class="kpi"><span class="kpi-num">6.7%</span><span class="kpi-nom">Tasa de conversión</span>
+        <span class='medidor'><span style='width:6.7%'></span></span><span class="kpi-sub">3 de 45 leads</span><span class='kpi-delta arriba'>▲ 3.5 pts vs. equipo</span></div>
+      <div class="kpi"><span class="kpi-num">51.1%</span><span class="kpi-nom">Avance en la conversación</span>
+        <span class='medidor'><span style='width:51.1%'></span></span><span class="kpi-sub">23 leads avanzaron</span><span class='kpi-delta arriba'>▲ 13.2 pts vs. equipo</span></div>
+      <div class="kpi"><span class="kpi-num">100.0%</span><span class="kpi-nom">Recibieron un mensaje</span>
+        <span class='medidor'><span style='width:100.0%'></span></span><span class="kpi-sub">45 de 45 leads</span><span class='kpi-delta'>igual que el equipo</span></div>
+    </section>
+    <div class="grilla">
+      <section class="panel">
+        <h2>Tasa de respuesta del cliente por tipo de mensaje</h2>
+        <p class="bajada">Qué combinación de mensajes conviene usar para abrir la conversación.</p>
+        <div class='barras'><div class='fila' data-tip='Respondieron 16 de 30 leads'><span class='etq'><span class="chips"><span class="chip"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 4.5h10M3 8h10M3 11.5h6"/></svg>Texto</span><span class="chip"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6.8 9.2l2.4-2.4"/><path d="M7.4 4.6l1.1-1.1a2.6 2.6 0 0 1 3.7 3.7l-1.1 1.1"/><path d="M8.6 11.4l-1.1 1.1a2.6 2.6 0 0 1-3.7-3.7l1.1-1.1"/></svg>Link</span><span class="chip"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="2.2" y="3" width="11.6" height="10" rx="1.6"/><path d="M2.6 11.2l3.3-3.3 2.8 2.8 1.9-1.9 3 3"/></svg>Multimedia</span><span class="chip"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="6" y="1.8" width="4" height="8" rx="2"/><path d="M3.8 7.6a4.2 4.2 0 0 0 8.4 0M8 11.8v2.4"/></svg>Audio</span></span><span class='insignia'>Mejor</span></span><span class='pista'><span class='barra' style='width:53.3%'></span></span><span class='valor'>53.3%<span class='n'>(30)</span></span></div><div class='fila' data-tip='Respondieron 2 de 7 leads'><span class='etq'><span class="chips"><span class="chip"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M9.2 1.8L4 9h4l-1.2 5.2L12 7H8z"/></svg>Automático</span></span></span><span class='pista'><span class='barra' style='width:28.6%'></span></span><span class='valor'>28.6%<span class='n'>(7)</span></span></div><div class='fila chica' data-tip='Respondieron 3 de 3 leads · muestra chica'><span class='etq'><span class="chips"><span class="chip"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 4.5h10M3 8h10M3 11.5h6"/></svg>Texto</span></span></span><span class='pista'><span class='barra' style='width:100.0%'></span></span><span class='valor'>100.0%<span class='n'>(3)</span></span></div><div class='fila chica' data-tip='Respondieron 1 de 2 leads · muestra chica'><span class='etq'><span class="chips"><span class="chip"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M9.2 1.8L4 9h4l-1.2 5.2L12 7H8z"/></svg>Automático</span><span class="chip"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 4.5h10M3 8h10M3 11.5h6"/></svg>Texto</span></span></span><span class='pista'><span class='barra' style='width:50.0%'></span></span><span class='valor'>50.0%<span class='n'>(2)</span></span></div><div class='fila chica' data-tip='Respondieron 1 de 1 lead · muestra chica'><span class='etq'><span class="chips"><span class="chip"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 4.5h10M3 8h10M3 11.5h6"/></svg>Texto</span><span class="chip"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6.8 9.2l2.4-2.4"/><path d="M7.4 4.6l1.1-1.1a2.6 2.6 0 0 1 3.7 3.7l-1.1 1.1"/><path d="M8.6 11.4l-1.1 1.1a2.6 2.6 0 0 1-3.7-3.7l1.1-1.1"/></svg>Link</span><span class="chip"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="2.2" y="3" width="11.6" height="10" rx="1.6"/><path d="M2.6 11.2l3.3-3.3 2.8 2.8 1.9-1.9 3 3"/></svg>Multimedia</span></span></span><span class='pista'><span class='barra' style='width:100.0%'></span></span><span class='valor'>100.0%<span class='n'>(1)</span></span></div><div class='fila chica' data-tip='Respondieron 1 de 1 lead · muestra chica'><span class='etq'><span class="chips"><span class="chip"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 4.5h10M3 8h10M3 11.5h6"/></svg>Texto</span><span class="chip"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6.8 9.2l2.4-2.4"/><path d="M7.4 4.6l1.1-1.1a2.6 2.6 0 0 1 3.7 3.7l-1.1 1.1"/><path d="M8.6 11.4l-1.1 1.1a2.6 2.6 0 0 1-3.7-3.7l1.1-1.1"/></svg>Link</span><span class="chip"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="6" y="1.8" width="4" height="8" rx="2"/><path d="M3.8 7.6a4.2 4.2 0 0 0 8.4 0M8 11.8v2.4"/></svg>Audio</span></span></span><span class='pista'><span class='barra' style='width:100.0%'></span></span><span class='valor'>100.0%<span class='n'>(1)</span></span></div><div class='fila chica' data-tip='Respondieron 0 de 1 lead · muestra chica'><span class='etq'><span class="chips"><span class="chip"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6.8 9.2l2.4-2.4"/><path d="M7.4 4.6l1.1-1.1a2.6 2.6 0 0 1 3.7 3.7l-1.1 1.1"/><path d="M8.6 11.4l-1.1 1.1a2.6 2.6 0 0 1-3.7-3.7l1.1-1.1"/></svg>Link</span><span class="chip"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="2.2" y="3" width="11.6" height="10" rx="1.6"/><path d="M2.6 11.2l3.3-3.3 2.8 2.8 1.9-1.9 3 3"/></svg>Multimedia</span><span class="chip"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="6" y="1.8" width="4" height="8" rx="2"/><path d="M3.8 7.6a4.2 4.2 0 0 0 8.4 0M8 11.8v2.4"/></svg>Audio</span></span></span><span class='pista'><span class='barra' style='width:0.0%'></span></span><span class='valor'>0.0%<span class='n'>(1)</span></span></div></div>
+        <p class='lectura'>La combinación más usada, <strong>Texto + Link + Multimedia + Audio</strong>, es también la que más respuesta logra: 53.3%.</p>
+        <details><summary>Cómo se calcula</summary><p>Se toma la primera ráfaga del vendedor en cada lead (una combinación por lead). Responde = el cliente escribe justo después. Entre paréntesis, a cuántos leads se les mandó esa combinación. Las filas atenuadas tienen menos de 5 casos.</p></details>
+      </section>
+
+      <section class="panel">
+        <h2>Avance según cantidad de mensajes en la ráfaga</h2>
+        <p class="bajada">Si mandar muchos mensajes seguidos ayuda o satura al cliente.</p>
+        <div class='barras'><div class='fila' data-tip='Avanzaron 6 de 12 leads'><span class='etq'>≤2 mensajes</span><span class='pista'><span class='barra' style='width:50.0%'></span></span><span class='valor'>50.0%<span class='n'>(12)</span></span></div><div class='fila chica' data-tip='Avanzaron 0 de 2 leads · muestra chica'><span class='etq'>3 mensajes</span><span class='pista'><span class='barra' style='width:0.0%'></span></span><span class='valor'>0.0%<span class='n'>(2)</span></span></div><div class='fila' data-tip='Avanzaron 16 de 30 leads'><span class='etq'>4 mensajes<span class='insignia'>Mejor</span></span><span class='pista'><span class='barra' style='width:53.3%'></span></span><span class='valor'>53.3%<span class='n'>(30)</span></span></div><div class='fila chica' data-tip='Avanzaron 1 de 1 lead · muestra chica'><span class='etq'>5+ mensajes</span><span class='pista'><span class='barra' style='width:100.0%'></span></span><span class='valor'>100.0%<span class='n'>(1)</span></span></div></div>
+        <p class='lectura'>Con <strong>4 mensajes</strong> avanza el 53.3% de los leads; con <strong>≤2 mensajes</strong>, el 50.0%.</p>
+        <details><summary>Cómo se calcula</summary><p>Ráfaga = mensajes seguidos del vendedor antes de que conteste el cliente. El porcentaje es cuántos de esos leads avanzaron; entre paréntesis, cuántos leads recibieron esa cantidad.</p></details>
+      </section>
+
+      <section class="panel">
+        <h2>Leads por día</h2>
+        <p class="bajada">Leads nuevos por día, según la fecha del primer mensaje del cliente.</p>
+        <div class='columnas'><div class='col' data-tip='mar 06/10/2026: 2 leads'><span class='col-zona'><span class='col-barra' style='height:25.0%'><span class='col-val'>2</span></span></span><span class='col-fecha'><span class='col-dia'>mar</span>06/10</span></div><div class='col' data-tip='mié 07/10/2026: 5 leads'><span class='col-zona'><span class='col-barra' style='height:62.5%'><span class='col-val'>5</span></span></span><span class='col-fecha'><span class='col-dia'>mié</span>07/10</span></div><div class='col' data-tip='jue 08/10/2026: 8 leads'><span class='col-zona'><span class='col-barra' style='height:100.0%'><span class='col-val'>8</span></span></span><span class='col-fecha'><span class='col-dia'>jue</span>08/10</span></div><div class='col' data-tip='vie 09/10/2026: 3 leads'><span class='col-zona'><span class='col-barra' style='height:37.5%'><span class='col-val'>3</span></span></span><span class='col-fecha'><span class='col-dia'>vie</span>09/10</span></div><div class='col finde' data-tip='sáb 10/10/2026: 2 leads'><span class='col-zona'><span class='col-barra' style='height:25.0%'><span class='col-val'>2</span></span></span><span class='col-fecha'><span class='col-dia'>sáb</span>10/10</span></div><div class='col finde' data-tip='dom 11/10/2026: 8 leads'><span class='col-zona'><span class='col-barra' style='height:100.0%'><span class='col-val'>8</span></span></span><span class='col-fecha'><span class='col-dia'>dom</span>11/10</span></div><div class='col' data-tip='lun 12/10/2026: 4 leads'><span class='col-zona'><span class='col-barra' style='height:50.0%'><span class='col-val'>4</span></span></span><span class='col-fecha'><span class='col-dia'>lun</span>12/10</span></div><div class='col' data-tip='mar 13/10/2026: 4 leads'><span class='col-zona'><span class='col-barra' style='height:50.0%'><span class='col-val'>4</span></span></span><span class='col-fecha'><span class='col-dia'>mar</span>13/10</span></div><div class='col' data-tip='mié 14/10/2026: 3 leads'><span class='col-zona'><span class='col-barra' style='height:37.5%'><span class='col-val'>3</span></span></span><span class='col-fecha'><span class='col-dia'>mié</span>14/10</span></div><div class='col' data-tip='jue 15/10/2026: 6 leads'><span class='col-zona'><span class='col-barra' style='height:75.0%'><span class='col-val'>6</span></span></span><span class='col-fecha'><span class='col-dia'>jue</span>15/10</span></div></div><p class='leyenda'><span class='muestra-finde'></span>Sábado o domingo</p>
+        <p class='lectura'>El pico fue el <strong>jue 08/10</strong>, con 8 leads. Los fines de semana entraron 10 leads en 2 días.</p>
+      </section>
+
+      <section class="panel">
+        <h2>Dónde murió la conversación</h2>
+        <p class="bajada">En qué momento se corta la charla, para ver dónde está la fuga.</p>
+        <div class='barras'><div class='fila' data-tip='17 de 42 conversaciones'><span class='etq'>Después de audio<span class='insignia'>Mayor fuga</span></span><span class='pista'><span class='barra' style='width:40.5%'></span></span><span class='valor'>40.5%<span class='n'>(17)</span></span></div><div class='fila' data-tip='10 de 42 conversaciones'><span class='etq'>Después de texto</span><span class='pista'><span class='barra' style='width:23.8%'></span></span><span class='valor'>23.8%<span class='n'>(10)</span></span></div><div class='fila' data-tip='9 de 42 conversaciones'><span class='etq'>Después de automático</span><span class='pista'><span class='barra' style='width:21.4%'></span></span><span class='valor'>21.4%<span class='n'>(9)</span></span></div><div class='fila chica' data-tip='4 de 42 conversaciones · muestra chica'><span class='etq'>Última palabra del cliente</span><span class='pista'><span class='barra' style='width:9.5%'></span></span><span class='valor'>9.5%<span class='n'>(4)</span></span></div><div class='fila chica' data-tip='2 de 42 conversaciones · muestra chica'><span class='etq'>Después de multimedia</span><span class='pista'><span class='barra' style='width:4.8%'></span></span><span class='valor'>4.8%<span class='n'>(2)</span></span></div></div>
+        
+        <details><summary>Cómo se calcula</summary><p>Se mira quién mandó el último mensaje y de qué tipo era. No incluye los leads que pasaron a CRM.</p></details>
+      </section>
+    </div>
+  </div>
+  <div class="vista v-2">
+    
+    <section class="kpis" aria-label="Resumen">
+      <div class="kpi"><span class="kpi-num">20</span><span class="kpi-nom">Leads únicos</span>
+        <span class="kpi-sub">&nbsp;</span><span class='kpi-delta'>21% de los leads del equipo</span></div>
+      <div class="kpi"><span class="kpi-num">0</span><span class="kpi-nom">Pasados a CRM</span>
+        <span class="kpi-sub">&nbsp;</span><span class='kpi-delta'>de 3 del equipo</span></div>
+      <div class="kpi"><span class="kpi-num">0.0%</span><span class="kpi-nom">Tasa de conversión</span>
+        <span class='medidor'><span style='width:0.0%'></span></span><span class="kpi-sub">0 de 20 leads</span><span class='kpi-delta abajo'>▼ 3.2 pts vs. equipo</span></div>
+      <div class="kpi"><span class="kpi-num">25.0%</span><span class="kpi-nom">Avance en la conversación</span>
+        <span class='medidor'><span style='width:25.0%'></span></span><span class="kpi-sub">5 leads avanzaron</span><span class='kpi-delta abajo'>▼ 12.9 pts vs. equipo</span></div>
+      <div class="kpi"><span class="kpi-num">100.0%</span><span class="kpi-nom">Recibieron un mensaje</span>
+        <span class='medidor'><span style='width:100.0%'></span></span><span class="kpi-sub">20 de 20 leads</span><span class='kpi-delta'>igual que el equipo</span></div>
+    </section>
+    <div class="grilla">
+      <section class="panel">
+        <h2>Tasa de respuesta del cliente por tipo de mensaje</h2>
+        <p class="bajada">Qué combinación de mensajes conviene usar para abrir la conversación.</p>
+        <div class='barras'><div class='fila' data-tip='Respondieron 6 de 15 leads'><span class='etq'><span class="chips"><span class="chip"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 4.5h10M3 8h10M3 11.5h6"/></svg>Texto</span><span class="chip"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6.8 9.2l2.4-2.4"/><path d="M7.4 4.6l1.1-1.1a2.6 2.6 0 0 1 3.7 3.7l-1.1 1.1"/><path d="M8.6 11.4l-1.1 1.1a2.6 2.6 0 0 1-3.7-3.7l1.1-1.1"/></svg>Link</span><span class="chip"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="2.2" y="3" width="11.6" height="10" rx="1.6"/><path d="M2.6 11.2l3.3-3.3 2.8 2.8 1.9-1.9 3 3"/></svg>Multimedia</span></span></span><span class='pista'><span class='barra' style='width:40.0%'></span></span><span class='valor'>40.0%<span class='n'>(15)</span></span></div><div class='fila chica' data-tip='Respondieron 2 de 3 leads · muestra chica'><span class='etq'><span class="chips"><span class="chip"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 4.5h10M3 8h10M3 11.5h6"/></svg>Texto</span></span></span><span class='pista'><span class='barra' style='width:66.7%'></span></span><span class='valor'>66.7%<span class='n'>(3)</span></span></div><div class='fila chica' data-tip='Respondieron 0 de 2 leads · muestra chica'><span class='etq'><span class="chips"><span class="chip"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M9.2 1.8L4 9h4l-1.2 5.2L12 7H8z"/></svg>Automático</span><span class="chip"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 4.5h10M3 8h10M3 11.5h6"/></svg>Texto</span></span></span><span class='pista'><span class='barra' style='width:0.0%'></span></span><span class='valor'>0.0%<span class='n'>(2)</span></span></div></div>
+        
+        <details><summary>Cómo se calcula</summary><p>Se toma la primera ráfaga del vendedor en cada lead (una combinación por lead). Responde = el cliente escribe justo después. Entre paréntesis, a cuántos leads se les mandó esa combinación. Las filas atenuadas tienen menos de 5 casos.</p></details>
+      </section>
+
+      <section class="panel">
+        <h2>Avance según cantidad de mensajes en la ráfaga</h2>
+        <p class="bajada">Si mandar muchos mensajes seguidos ayuda o satura al cliente.</p>
+        <div class='barras'><div class='fila chica' data-tip='Avanzaron 2 de 3 leads · muestra chica'><span class='etq'>≤2 mensajes</span><span class='pista'><span class='barra' style='width:66.7%'></span></span><span class='valor'>66.7%<span class='n'>(3)</span></span></div><div class='fila' data-tip='Avanzaron 3 de 15 leads'><span class='etq'>3 mensajes</span><span class='pista'><span class='barra' style='width:20.0%'></span></span><span class='valor'>20.0%<span class='n'>(15)</span></span></div><div class='fila chica' data-tip='Avanzaron 0 de 2 leads · muestra chica'><span class='etq'>4 mensajes</span><span class='pista'><span class='barra' style='width:0.0%'></span></span><span class='valor'>0.0%<span class='n'>(2)</span></span></div></div>
+        
+        <details><summary>Cómo se calcula</summary><p>Ráfaga = mensajes seguidos del vendedor antes de que conteste el cliente. El porcentaje es cuántos de esos leads avanzaron; entre paréntesis, cuántos leads recibieron esa cantidad.</p></details>
+      </section>
+
+      <section class="panel">
+        <h2>Leads por día</h2>
+        <p class="bajada">Leads nuevos por día, según la fecha del primer mensaje del cliente.</p>
+        <div class='columnas'><div class='col' data-tip='mié 07/10/2026: 2 leads'><span class='col-zona'><span class='col-barra' style='height:40.0%'><span class='col-val'>2</span></span></span><span class='col-fecha'><span class='col-dia'>mié</span>07/10</span></div><div class='col' data-tip='jue 08/10/2026: 4 leads'><span class='col-zona'><span class='col-barra' style='height:80.0%'><span class='col-val'>4</span></span></span><span class='col-fecha'><span class='col-dia'>jue</span>08/10</span></div><div class='col' data-tip='vie 09/10/2026: 2 leads'><span class='col-zona'><span class='col-barra' style='height:40.0%'><span class='col-val'>2</span></span></span><span class='col-fecha'><span class='col-dia'>vie</span>09/10</span></div><div class='col finde' data-tip='sáb 10/10/2026: 5 leads'><span class='col-zona'><span class='col-barra' style='height:100.0%'><span class='col-val'>5</span></span></span><span class='col-fecha'><span class='col-dia'>sáb</span>10/10</span></div><div class='col' data-tip='lun 12/10/2026: 5 leads'><span class='col-zona'><span class='col-barra' style='height:100.0%'><span class='col-val'>5</span></span></span><span class='col-fecha'><span class='col-dia'>lun</span>12/10</span></div><div class='col' data-tip='mar 13/10/2026: 2 leads'><span class='col-zona'><span class='col-barra' style='height:40.0%'><span class='col-val'>2</span></span></span><span class='col-fecha'><span class='col-dia'>mar</span>13/10</span></div></div><p class='leyenda'><span class='muestra-finde'></span>Sábado o domingo</p>
+        <p class='lectura'>El pico fue el <strong>sáb 10/10</strong>, con 5 leads. Los fines de semana entraron 5 leads en 1 día.</p>
+      </section>
+
+      <section class="panel">
+        <h2>Dónde murió la conversación</h2>
+        <p class="bajada">En qué momento se corta la charla, para ver dónde está la fuga.</p>
+        <div class='barras'><div class='fila' data-tip='10 de 20 conversaciones'><span class='etq'>Después de multimedia<span class='insignia'>Mayor fuga</span></span><span class='pista'><span class='barra' style='width:50.0%'></span></span><span class='valor'>50.0%<span class='n'>(10)</span></span></div><div class='fila chica' data-tip='4 de 20 conversaciones · muestra chica'><span class='etq'>Última palabra del cliente</span><span class='pista'><span class='barra' style='width:20.0%'></span></span><span class='valor'>20.0%<span class='n'>(4)</span></span></div><div class='fila chica' data-tip='4 de 20 conversaciones · muestra chica'><span class='etq'>Después de automático</span><span class='pista'><span class='barra' style='width:20.0%'></span></span><span class='valor'>20.0%<span class='n'>(4)</span></span></div><div class='fila chica' data-tip='2 de 20 conversaciones · muestra chica'><span class='etq'>Después de texto</span><span class='pista'><span class='barra' style='width:10.0%'></span></span><span class='valor'>10.0%<span class='n'>(2)</span></span></div></div>
+        
+        <details><summary>Cómo se calcula</summary><p>Se mira quién mandó el último mensaje y de qué tipo era. No incluye los leads que pasaron a CRM.</p></details>
+      </section>
+    </div>
+  </div>
+  <div class="vista v-3">
+    
+    <section class="kpis" aria-label="Resumen">
+      <div class="kpi"><span class="kpi-num">29</span><span class="kpi-nom">Leads únicos</span>
+        <span class="kpi-sub">&nbsp;</span><span class='kpi-delta'>31% de los leads del equipo</span></div>
+      <div class="kpi"><span class="kpi-num">0</span><span class="kpi-nom">Pasados a CRM</span>
+        <span class="kpi-sub">&nbsp;</span><span class='kpi-delta'>de 3 del equipo</span></div>
+      <div class="kpi"><span class="kpi-num">0.0%</span><span class="kpi-nom">Tasa de conversión</span>
+        <span class='medidor'><span style='width:0.0%'></span></span><span class="kpi-sub">0 de 29 leads</span><span class='kpi-delta abajo'>▼ 3.2 pts vs. equipo</span></div>
+      <div class="kpi"><span class="kpi-num">27.6%</span><span class="kpi-nom">Avance en la conversación</span>
+        <span class='medidor'><span style='width:27.6%'></span></span><span class="kpi-sub">8 leads avanzaron</span><span class='kpi-delta abajo'>▼ 10.3 pts vs. equipo</span></div>
+      <div class="kpi"><span class="kpi-num">100.0%</span><span class="kpi-nom">Recibieron un mensaje</span>
+        <span class='medidor'><span style='width:100.0%'></span></span><span class="kpi-sub">29 de 29 leads</span><span class='kpi-delta'>igual que el equipo</span></div>
+    </section>
+    <div class="grilla">
+      <section class="panel">
+        <h2>Tasa de respuesta del cliente por tipo de mensaje</h2>
+        <p class="bajada">Qué combinación de mensajes conviene usar para abrir la conversación.</p>
+        <div class='barras'><div class='fila' data-tip='Respondieron 4 de 17 leads'><span class='etq'><span class="chips"><span class="chip"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 4.5h10M3 8h10M3 11.5h6"/></svg>Texto</span><span class="chip"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6.8 9.2l2.4-2.4"/><path d="M7.4 4.6l1.1-1.1a2.6 2.6 0 0 1 3.7 3.7l-1.1 1.1"/><path d="M8.6 11.4l-1.1 1.1a2.6 2.6 0 0 1-3.7-3.7l1.1-1.1"/></svg>Link</span><span class="chip"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="2.2" y="3" width="11.6" height="10" rx="1.6"/><path d="M2.6 11.2l3.3-3.3 2.8 2.8 1.9-1.9 3 3"/></svg>Multimedia</span></span></span><span class='pista'><span class='barra' style='width:23.5%'></span></span><span class='valor'>23.5%<span class='n'>(17)</span></span></div><div class='fila' data-tip='Respondieron 6 de 7 leads'><span class='etq'><span class="chips"><span class="chip"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 4.5h10M3 8h10M3 11.5h6"/></svg>Texto</span></span><span class='insignia'>Mejor</span></span><span class='pista'><span class='barra' style='width:85.7%'></span></span><span class='valor'>85.7%<span class='n'>(7)</span></span></div><div class='fila chica' data-tip='Respondieron 0 de 3 leads · muestra chica'><span class='etq'><span class="chips"><span class="chip"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M9.2 1.8L4 9h4l-1.2 5.2L12 7H8z"/></svg>Automático</span><span class="chip"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 4.5h10M3 8h10M3 11.5h6"/></svg>Texto</span></span></span><span class='pista'><span class='barra' style='width:0.0%'></span></span><span class='valor'>0.0%<span class='n'>(3)</span></span></div><div class='fila chica' data-tip='Respondieron 0 de 2 leads · muestra chica'><span class='etq'><span class="chips"><span class="chip"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M9.2 1.8L4 9h4l-1.2 5.2L12 7H8z"/></svg>Automático</span></span></span><span class='pista'><span class='barra' style='width:0.0%'></span></span><span class='valor'>0.0%<span class='n'>(2)</span></span></div></div>
+        <p class='lectura'>La combinación más usada, <strong>Texto + Link + Multimedia</strong>, logra 23.5% de respuesta. <strong>Texto</strong> llega a 85.7%.</p>
+        <details><summary>Cómo se calcula</summary><p>Se toma la primera ráfaga del vendedor en cada lead (una combinación por lead). Responde = el cliente escribe justo después. Entre paréntesis, a cuántos leads se les mandó esa combinación. Las filas atenuadas tienen menos de 5 casos.</p></details>
+      </section>
+
+      <section class="panel">
+        <h2>Avance según cantidad de mensajes en la ráfaga</h2>
+        <p class="bajada">Si mandar muchos mensajes seguidos ayuda o satura al cliente.</p>
+        <div class='barras'><div class='fila' data-tip='Avanzaron 6 de 10 leads'><span class='etq'>≤2 mensajes<span class='insignia'>Mejor</span></span><span class='pista'><span class='barra' style='width:60.0%'></span></span><span class='valor'>60.0%<span class='n'>(10)</span></span></div><div class='fila' data-tip='Avanzaron 2 de 18 leads'><span class='etq'>3 mensajes</span><span class='pista'><span class='barra' style='width:11.1%'></span></span><span class='valor'>11.1%<span class='n'>(18)</span></span></div><div class='fila chica' data-tip='Avanzaron 0 de 1 lead · muestra chica'><span class='etq'>5+ mensajes</span><span class='pista'><span class='barra' style='width:0.0%'></span></span><span class='valor'>0.0%<span class='n'>(1)</span></span></div></div>
+        <p class='lectura'>Con <strong>≤2 mensajes</strong> avanza el 60.0% de los leads; con <strong>3 mensajes</strong>, el 11.1%.</p>
+        <details><summary>Cómo se calcula</summary><p>Ráfaga = mensajes seguidos del vendedor antes de que conteste el cliente. El porcentaje es cuántos de esos leads avanzaron; entre paréntesis, cuántos leads recibieron esa cantidad.</p></details>
+      </section>
+
+      <section class="panel">
+        <h2>Leads por día</h2>
+        <p class="bajada">Leads nuevos por día, según la fecha del primer mensaje del cliente.</p>
+        <div class='columnas'><div class='col' data-tip='mar 06/10/2026: 5 leads'><span class='col-zona'><span class='col-barra' style='height:83.3%'><span class='col-val'>5</span></span></span><span class='col-fecha'><span class='col-dia'>mar</span>06/10</span></div><div class='col' data-tip='mié 07/10/2026: 6 leads'><span class='col-zona'><span class='col-barra' style='height:100.0%'><span class='col-val'>6</span></span></span><span class='col-fecha'><span class='col-dia'>mié</span>07/10</span></div><div class='col' data-tip='jue 08/10/2026: 1 lead'><span class='col-zona'><span class='col-barra' style='height:16.7%'><span class='col-val'>1</span></span></span><span class='col-fecha'><span class='col-dia'>jue</span>08/10</span></div><div class='col' data-tip='vie 09/10/2026: 4 leads'><span class='col-zona'><span class='col-barra' style='height:66.7%'><span class='col-val'>4</span></span></span><span class='col-fecha'><span class='col-dia'>vie</span>09/10</span></div><div class='col finde' data-tip='sáb 10/10/2026: 2 leads'><span class='col-zona'><span class='col-barra' style='height:33.3%'><span class='col-val'>2</span></span></span><span class='col-fecha'><span class='col-dia'>sáb</span>10/10</span></div><div class='col finde' data-tip='dom 11/10/2026: 2 leads'><span class='col-zona'><span class='col-barra' style='height:33.3%'><span class='col-val'>2</span></span></span><span class='col-fecha'><span class='col-dia'>dom</span>11/10</span></div><div class='col' data-tip='lun 12/10/2026: 4 leads'><span class='col-zona'><span class='col-barra' style='height:66.7%'><span class='col-val'>4</span></span></span><span class='col-fecha'><span class='col-dia'>lun</span>12/10</span></div><div class='col' data-tip='mar 13/10/2026: 3 leads'><span class='col-zona'><span class='col-barra' style='height:50.0%'><span class='col-val'>3</span></span></span><span class='col-fecha'><span class='col-dia'>mar</span>13/10</span></div><div class='col' data-tip='mié 14/10/2026: 2 leads'><span class='col-zona'><span class='col-barra' style='height:33.3%'><span class='col-val'>2</span></span></span><span class='col-fecha'><span class='col-dia'>mié</span>14/10</span></div></div><p class='leyenda'><span class='muestra-finde'></span>Sábado o domingo</p>
+        <p class='lectura'>El pico fue el <strong>mié 07/10</strong>, con 6 leads. Los fines de semana entraron 4 leads en 2 días.</p>
+      </section>
+
+      <section class="panel">
+        <h2>Dónde murió la conversación</h2>
+        <p class="bajada">En qué momento se corta la charla, para ver dónde está la fuga.</p>
+        <div class='barras'><div class='fila' data-tip='15 de 29 conversaciones'><span class='etq'>Después de multimedia<span class='insignia'>Mayor fuga</span></span><span class='pista'><span class='barra' style='width:51.7%'></span></span><span class='valor'>51.7%<span class='n'>(15)</span></span></div><div class='fila' data-tip='7 de 29 conversaciones'><span class='etq'>Después de automático</span><span class='pista'><span class='barra' style='width:24.1%'></span></span><span class='valor'>24.1%<span class='n'>(7)</span></span></div><div class='fila chica' data-tip='4 de 29 conversaciones · muestra chica'><span class='etq'>Última palabra del cliente</span><span class='pista'><span class='barra' style='width:13.8%'></span></span><span class='valor'>13.8%<span class='n'>(4)</span></span></div><div class='fila chica' data-tip='2 de 29 conversaciones · muestra chica'><span class='etq'>Después de texto</span><span class='pista'><span class='barra' style='width:6.9%'></span></span><span class='valor'>6.9%<span class='n'>(2)</span></span></div><div class='fila chica' data-tip='1 de 29 conversaciones · muestra chica'><span class='etq'>Después de link</span><span class='pista'><span class='barra' style='width:3.4%'></span></span><span class='valor'>3.4%<span class='n'>(1)</span></span></div></div>
+        
+        <details><summary>Cómo se calcula</summary><p>Se mira quién mandó el último mensaje y de qué tipo era. No incluye los leads que pasaron a CRM.</p></details>
+      </section>
+    </div>
+  </div>
+  <div class="vista v-4">
+    
+    <section class="kpis" aria-label="Resumen">
+      <div class="kpi"><span class="kpi-num">1</span><span class="kpi-nom">Leads únicos</span>
+        <span class="kpi-sub">&nbsp;</span><span class='kpi-delta'>1% de los leads del equipo</span></div>
+      <div class="kpi"><span class="kpi-num">0</span><span class="kpi-nom">Pasados a CRM</span>
+        <span class="kpi-sub">&nbsp;</span><span class='kpi-delta'>de 3 del equipo</span></div>
+      <div class="kpi"><span class="kpi-num">0.0%</span><span class="kpi-nom">Tasa de conversión</span>
+        <span class='medidor'><span style='width:0.0%'></span></span><span class="kpi-sub">0 de 1 lead</span><span class='kpi-delta abajo'>▼ 3.2 pts vs. equipo</span></div>
+      <div class="kpi"><span class="kpi-num">0.0%</span><span class="kpi-nom">Avance en la conversación</span>
+        <span class='medidor'><span style='width:0.0%'></span></span><span class="kpi-sub">0 leads avanzaron</span><span class='kpi-delta abajo'>▼ 37.9 pts vs. equipo</span></div>
+      <div class="kpi"><span class="kpi-num">100.0%</span><span class="kpi-nom">Recibieron un mensaje</span>
+        <span class='medidor'><span style='width:100.0%'></span></span><span class="kpi-sub">1 de 1 lead</span><span class='kpi-delta'>igual que el equipo</span></div>
+    </section>
+    <div class="grilla">
+      <section class="panel">
+        <h2>Tasa de respuesta del cliente por tipo de mensaje</h2>
+        <p class="bajada">Qué combinación de mensajes conviene usar para abrir la conversación.</p>
+        <div class='barras'><div class='fila chica' data-tip='Respondieron 0 de 1 lead · muestra chica'><span class='etq'><span class="chips"><span class="chip"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 4.5h10M3 8h10M3 11.5h6"/></svg>Texto</span><span class="chip"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6.8 9.2l2.4-2.4"/><path d="M7.4 4.6l1.1-1.1a2.6 2.6 0 0 1 3.7 3.7l-1.1 1.1"/><path d="M8.6 11.4l-1.1 1.1a2.6 2.6 0 0 1-3.7-3.7l1.1-1.1"/></svg>Link</span><span class="chip"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="2.2" y="3" width="11.6" height="10" rx="1.6"/><path d="M2.6 11.2l3.3-3.3 2.8 2.8 1.9-1.9 3 3"/></svg>Multimedia</span></span></span><span class='pista'><span class='barra' style='width:0.0%'></span></span><span class='valor'>0.0%<span class='n'>(1)</span></span></div></div>
+        
+        <details><summary>Cómo se calcula</summary><p>Se toma la primera ráfaga del vendedor en cada lead (una combinación por lead). Responde = el cliente escribe justo después. Entre paréntesis, a cuántos leads se les mandó esa combinación. Las filas atenuadas tienen menos de 5 casos.</p></details>
+      </section>
+
+      <section class="panel">
+        <h2>Avance según cantidad de mensajes en la ráfaga</h2>
+        <p class="bajada">Si mandar muchos mensajes seguidos ayuda o satura al cliente.</p>
+        <div class='barras'><div class='fila chica' data-tip='Avanzaron 0 de 1 lead · muestra chica'><span class='etq'>3 mensajes</span><span class='pista'><span class='barra' style='width:0.0%'></span></span><span class='valor'>0.0%<span class='n'>(1)</span></span></div></div>
+        
+        <details><summary>Cómo se calcula</summary><p>Ráfaga = mensajes seguidos del vendedor antes de que conteste el cliente. El porcentaje es cuántos de esos leads avanzaron; entre paréntesis, cuántos leads recibieron esa cantidad.</p></details>
+      </section>
+
+      <section class="panel">
+        <h2>Leads por día</h2>
+        <p class="bajada">Leads nuevos por día, según la fecha del primer mensaje del cliente.</p>
+        <div class='columnas'><div class='col' data-tip='jue 08/10/2026: 1 lead'><span class='col-zona'><span class='col-barra' style='height:100.0%'><span class='col-val'>1</span></span></span><span class='col-fecha'><span class='col-dia'>jue</span>08/10</span></div></div>
+        
+      </section>
+
+      <section class="panel">
+        <h2>Dónde murió la conversación</h2>
+        <p class="bajada">En qué momento se corta la charla, para ver dónde está la fuga.</p>
+        <div class='barras'><div class='fila chica' data-tip='1 de 1 conversación · muestra chica'><span class='etq'>Después de multimedia</span><span class='pista'><span class='barra' style='width:100.0%'></span></span><span class='valor'>100.0%<span class='n'>(1)</span></span></div></div>
+        
+        <details><summary>Cómo se calcula</summary><p>Se mira quién mandó el último mensaje y de qué tipo era. No incluye los leads que pasaron a CRM.</p></details>
+      </section>
+    </div>
+  </div>
+
+  <section class="panel ancho vendedores">
+    <h2>Vendedores</h2>
+    <p class="bajada">Cuántos leads tuvo cada vendedor, qué porcentaje avanzó y cuántos pasaron a CRM. Tocá un nombre para filtrar el dashboard.</p>
+    <div class="tabla-scroll"><table>
+      <colgroup><col class="c-nom"><col class="c-leads"><col><col class="c-crm"></colgroup>
+      <thead><tr><th>Vendedor</th><th class="num">Leads</th>
+        <th class="num">Avance</th>
+        <th class="num">Pasados a CRM</th></tr></thead>
+      <tbody><tr class='fv-1'><td><label for='f-1' class='vnom'><span class='avatar'>MG</span>Marcelo Gomez</label></td><td class='num grande'>45<span class='solo-movil'> leads</span></td><td class='num'><span class='grande avance-pct' data-tip='Avanzaron 23 de 45 leads'>51.1%</span><span class='solo-movil'> avance</span></td><td class='num'><span class='grande'>3</span><span class='solo-movil'> pasados a CRM</span><span class='pct-suave'>6.7% de sus leads</span></td></tr><tr class='fv-2'><td><label for='f-2' class='vnom'><span class='avatar'>YH</span>Yamila Hardach</label></td><td class='num grande'>20<span class='solo-movil'> leads</span></td><td class='num'><span class='grande avance-pct' data-tip='Avanzaron 5 de 20 leads'>25.0%</span><span class='solo-movil'> avance</span></td><td class='num'><span class='grande'>0</span><span class='solo-movil'> pasados a CRM</span><span class='pct-suave'>0.0% de sus leads</span></td></tr><tr class='fv-3'><td><label for='f-3' class='vnom'><span class='avatar'>MC</span>Mariana Calgaterra</label></td><td class='num grande'>29<span class='solo-movil'> leads</span></td><td class='num'><span class='grande avance-pct' data-tip='Avanzaron 8 de 29 leads'>27.6%</span><span class='solo-movil'> avance</span></td><td class='num'><span class='grande'>0</span><span class='solo-movil'> pasados a CRM</span><span class='pct-suave'>0.0% de sus leads</span></td></tr><tr class='fv-4'><td><label for='f-4' class='vnom'><span class='avatar'>SA</span>(sin asignar)</label></td><td class='num grande'>1<span class='solo-movil'> lead</span></td><td class='num'><span class='grande avance-pct' data-tip='Avanzaron 0 de 1 lead'>0.0%</span><span class='solo-movil'> avance</span></td><td class='num'><span class='grande'>0</span><span class='solo-movil'> pasados a CRM</span><span class='pct-suave'>0.0% de sus leads</span></td></tr><tr class='total'><td><span class='vnom'>Total del equipo</span></td><td class='num grande'>95<span class='solo-movil'> leads</span></td><td class='num'><span class='grande avance-pct' data-tip='Avanzaron 36 de 95 leads'>37.9%</span><span class='solo-movil'> avance</span></td><td class='num'><span class='grande'>3</span><span class='solo-movil'> pasados a CRM</span><span class='pct-suave'>3.2% de sus leads</span></td></tr></tbody>
+    </table></div>
+    <details><summary>Qué cuenta como avance</summary><p>El cliente responde algo concreto después del primer mensaje del vendedor. No cuentan los cierres como “gracias”, “bueno” u “ok”.</p></details>
+  </section>
+</main>
+</body></html>
